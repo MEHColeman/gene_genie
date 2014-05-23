@@ -1,9 +1,7 @@
-source 'https://rubygems.org/'
+source 'https://rubygems.org'
 
-ruby '2.0.0'
+gemspec
 
-group :development do
-  gem 'minitest-spec'
-  gem 'guard'
-  gem 'guard-minitest'
-end
+# include local gemfile, for local people. TUBBS!
+local_gemfile = File.join(File.dirname(__FILE__), 'Gemfile.local')
+instance_eval(File.read(local_gemfile)) if File.readable?(local_gemfile)
