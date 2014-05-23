@@ -1,0 +1,14 @@
+# Gems that are not necessary, but might be useful or a personal preference.
+# They won't go into the git repo, so fill yer boots! Rename to Gemfile.local.
+
+group :development do
+  gem 'excellent'
+  gem 'simplecov'
+  gem 'cane'
+  gem 'metric_fu'
+  gem 'sandi_meter'
+  gem 'guard'
+  gem 'guard-minitest'
+  gem 'pry'
+  gem 'pry-debugger'
+end
