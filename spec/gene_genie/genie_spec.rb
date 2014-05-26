@@ -80,6 +80,14 @@ module GeneGenie
         # this test might not always pass. #statistics
       end
     end
-
+    describe '#best_fitness' do
+      it 'returns the fitness of the best gene' do
+        genie = Genie.new(template, @fitness_evaluator)
+        genie.optimise(1)
+        optimised = genie.best
+        optimised_fitness = @fitness_evaluator.fitness(optimised)
+        assert true, optimised_fitness == genie.best_fitness
+      end
+    end
   end
 end
