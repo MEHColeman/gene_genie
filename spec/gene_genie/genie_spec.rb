@@ -38,6 +38,10 @@ module GeneGenie
         assert true, @genie.best_fitness > (90 * 90)
       end
 
+      it 'also optimizes' do
+        assert true, @genie.optimize
+      end
+
       it "returns false if it doesn't improve current best_fitness" do
         template = { a: 1..3, b: 1..3 }
         genie = Genie.new(template, @fitness_evaluator)
@@ -80,6 +84,7 @@ module GeneGenie
         # this test might not always pass. #statistics
       end
     end
+
     describe '#best_fitness' do
       it 'returns the fitness of the best gene' do
         genie = Genie.new(template, @fitness_evaluator)

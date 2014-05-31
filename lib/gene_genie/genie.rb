@@ -18,6 +18,7 @@ module GeneGenie
     def optimise(number_of_generations = 0)
       true
     end
+    alias_method :optimize, :optimise
 
     def best
       Gene.new
