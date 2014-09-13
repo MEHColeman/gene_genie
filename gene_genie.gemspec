@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Mark Coleman']
   spec.email         = ['m@rkcoleman.co.uk']
   spec.summary       = %q{Genetic algorithm optimisation gem}
-  spec.description   = %q{Optimise anything that responds do 'fitness' and takes a hash}
+  spec.description   = %q{JUST A PROTOTYPE WORK IN PROGRESS! Optimise anything that responds to 'fitness' and takes a hash}
   spec.homepage      = 'https://github.com/MEHColeman/gene_genie'
   spec.license       = 'MIT'
 

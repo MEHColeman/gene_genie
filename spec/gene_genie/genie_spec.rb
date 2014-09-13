@@ -13,7 +13,7 @@ module GeneGenie
     before do
       @fitness_evaluator = Object.new
       def @fitness_evaluator.fitness(params)
-        params.each_value.inject(:*)
+        params.each_value.inject(:*) || 1
       end
     end
 
@@ -30,28 +30,41 @@ module GeneGenie
       end
 
       it 'returns true when it successfully optimises' do
-        assert true, @genie.optimise
+        assert_equal true, @genie.optimise
       end
 
       it 'optimises' do
-        assert true, @genie.optimise
-        assert true, @genie.best_fitness > (90 * 90)
+        assert_equal true, @genie.optimise
+        assert_equal true, @genie.best_fitness > (90 * 90)
       end
 
       it 'also optimizes' do
-        assert true, @genie.optimize
+        assert_equal true, @genie.optimize
       end
 
       it "returns false if it doesn't improve current best_fitness" do
         template = { a: 1..3, b: 1..3 }
         genie = Genie.new(template, @fitness_evaluator)
-        assert true, genie.optimise(10)
-        # this will surely find THE optimal result
-        assert false, genie.optimise(10)
+        first_fitness = genie.best_fitness
+        def @fitness_evaluator.fitness(_)
+          20
+        end
+        assert_equal true, genie.optimise(10)
+
+        second_fitness = genie.best_fitness
+        assert second_fitness > first_fitness
+
+        def @fitness_evaluator.fitness(_)
+          10
+        end
+        assert_equal false, genie.optimise(10)
+
+        third_fitness = genie.best_fitness
+        assert third_fitness < second_fitness
       end
 
       it 'takes an optional number_of_generations argument' do
-        assert true, @genie.optimise(1)
+        assert_equal true, @genie.optimise(1)
       end
     end
 
@@ -66,8 +79,8 @@ module GeneGenie
         assert_kind_of Hash, optimised
         template.each do |k, v|
           refute_nil optimised[k]
-          assert true, optimised[k] >= v.min
-          assert true, optimised[k] <= v.max
+          assert_equal true, optimised[k] >= v.min
+          assert_equal true, optimised[k] <= v.max
         end
       end
 
@@ -80,7 +93,7 @@ module GeneGenie
         optimised_many = @genie.best
         optimised_many_fitness = @fitness_evaluator.fitness(optimised_many)
 
-        assert true, optimised_1_fitness < optimised_many_fitness
+        assert_equal true, optimised_1_fitness < optimised_many_fitness
         # this test might not always pass. #statistics
       end
     end
@@ -91,7 +104,7 @@ module GeneGenie
         genie.optimise(1)
         optimised = genie.best
         optimised_fitness = @fitness_evaluator.fitness(optimised)
-        assert true, optimised_fitness == genie.best_fitness
+        assert_equal true, optimised_fitness == genie.best_fitness
       end
     end
   end

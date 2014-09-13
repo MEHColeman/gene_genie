@@ -10,18 +10,29 @@ module GeneGenie
     def initialize(template, fitness_evaluator)
       @template = template
       @fitness_evaluator = fitness_evaluator
+      # @gene_pool = GenePool.build(template, fitness_evaluator)
     end
 
     # Optimise the genes until the convergence criteria are met.
     # A reasonable set of defaults for criteria will be applied.
     # @param [Integer] number_of_generations
     def optimise(number_of_generations = 0)
-      true
+      previous_best = best_fitness
+
+      # optimise
+
+      @best_fitness = @fitness_evaluator.fitness(best)
+
+      best_fitness > previous_best
     end
     alias_method :optimize, :optimise
 
     def best
-      Gene.new
+      Hash.new
+    end
+
+    def best_fitness
+      @best_fitness ||= @fitness_evaluator.fitness(best)
     end
   end
 end

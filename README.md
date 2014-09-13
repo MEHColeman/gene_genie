@@ -4,6 +4,8 @@
 
 # Gene Genie
 
+This isn't even nearly ready yet.
+
 Hey, I wrote a genetic algorithm gem. Goals:
     * Have fun
     * Be easy and intuitive to use
@@ -24,6 +26,11 @@ Or install it yourself as:
     $ gem install gene_genie
 
 ## Usage
+Basic usage is designed to be as simple as possible. You provide two things: an exemplar and an evaluator.
+An exemplar is a list of variables along with their possible range of values.
+An evaluator implements a fitness method that returns a numeric value.
+The genetic algorithm will then search for the set of values that maximises the fitness.
+
 ```ruby
 require 'gene_genie'
 
@@ -36,6 +43,12 @@ exemplar = {
                          :evening, :midnight]
   }
 ```
+
+If you use the simple genie interface, the genetic algorithm will come up with a reasonable best-guesses for various algorthm parameters, but you can dive under the covers to give yourself more flexibility.
+* Population size
+* Gene pools
+* Initialisation
+Custom objects for crossover, gene selection, etc.
 
 ## Contributing
 
