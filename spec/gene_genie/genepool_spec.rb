@@ -15,26 +15,35 @@ module GeneGenie
       end
     end
 
-    it 'is initialised with a template and fitness_evaluator' do
-      gene_pool = GenePool.new(template, @fitness_evaluator)
+    describe '.build' do
+      it 'requires at least a template and fitness_evaluator' do
+        gene_pool = GenePool.build(template, @fitness_evaluator)
 
-      assert_kind_of GenePool, gene_pool
-    end
+        assert_kind_of GenePool, gene_pool
+      end
 
-    it 'returns an argument error unless the template is a hash of ranges' do
-      template = :not_a_hash_of_ranges
+      it 'returns an argument error unless the template is a hash of ranges' do
+        template = :not_a_hash_of_ranges
 
-      assert_raises(ArgumentError) do
-        gene_pool = GenePool.new(template, @fitness_evaluator)
+        assert_raises(ArgumentError) do
+          gene_pool = GenePool.build(template, @fitness_evaluator)
+        end
+      end
+
+      it 'returns an argument error unless the fitness_evaluator responds to #fitness' do
+        fitness_evaluator = Object.new
+
+        assert_raises(ArgumentError) do
+          gene_pool = GenePool.build(template, fitness_evaluator)
+        end
       end
     end
 
-    it 'returns an argument error unless the fitness_evaluator responds to #fitness' do
-      fitness_evaluator = Object.new
+    describe '.new' do
+      it 'also injects a template analyser' do
 
-      assert_raises(ArgumentError) do
-        gene_pool = GenePool.new(template, fitness_evaluator)
       end
     end
+
   end
 end

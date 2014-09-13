@@ -11,5 +11,9 @@ module GeneGenie
       @template = template
       @fitness_evaluator = fitness_evaluator
     end
+
+    def self.build(template, fitness_evaluator)
+      GenePool.new(template, fitness_evaluator)
+    end
   end
 end
