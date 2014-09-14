@@ -7,10 +7,14 @@ module GeneGenie
   # The default implementation will produce random genes, but other approaches
   # could be taken.
   class GeneFactory
-    def create(template, size = 1)
+    def initialize(template)
+      @template = template
+    end
+
+    def create(size = 1)
       genes = []
       size.times do
-        hash = create_hash_from_template(template)
+        hash = create_hash_from_template
         genes << Gene.new(hash)
       end
 
@@ -19,9 +23,9 @@ module GeneGenie
 
     private
 
-    def create_hash_from_template(template)
+    def create_hash_from_template
       new_hash = {}
-      template.each do |k, v|
+      @template.each do |k, v|
         new_hash[k] = rand(v)
       end
 
