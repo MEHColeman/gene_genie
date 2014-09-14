@@ -1,5 +1,5 @@
 require 'minitest_helper'
-require 'gene_pool'
+require 'gene_genie/gene_pool'
 
 module GeneGenie
 
