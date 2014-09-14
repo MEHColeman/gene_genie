@@ -40,6 +40,13 @@ module GeneGenie
     end
 
     describe '.new' do
+      it 'uses a GeneFactory to create a population of suitable Genes' do
+        gene_factory = MiniTest::Mock.new
+        gene_factory.expect :create, [], [10]
+        gene_pool = GenePool.new(template, @fitness_evaluator, gene_factory)
+
+        gene_factory.verify
+      end
       it 'also injects a template analyser' do
 
       end
