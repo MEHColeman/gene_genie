@@ -7,15 +7,16 @@ module GeneGenie
   # The default implementation will produce random genes, but other approaches
   # could be taken.
   class GeneFactory
-    def initialize(template)
+    def initialize(template, fitness_evaluator)
       @template = template
+      @fitness_evaluator = fitness_evaluator
     end
 
     def create(size = 1)
       genes = []
       size.times do
         hash = create_hash_from_template
-        genes << Gene.new(hash)
+        genes << Gene.new(hash, @fitness_evaluator)
       end
 
       genes

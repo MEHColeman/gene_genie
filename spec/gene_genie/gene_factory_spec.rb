@@ -4,14 +4,11 @@ require 'gene_genie/gene_factory'
 module GeneGenie
 
   describe GeneFactory do
-    let(:template) do
-      { a: 1..10, b: 2..20 }
-    end
-    subject { GeneFactory.new(template) }
+    subject { GeneFactory.new(sample_template, sample_fitness_evaluator) }
 
     describe 'initialize' do
-      it 'takes a template argument' do
-        assert_kind_of GeneFactory, GeneFactory.new(template)
+      it 'takes template and fitness_evaluator arguments' do
+        assert_kind_of GeneFactory, subject
       end
     end
 
