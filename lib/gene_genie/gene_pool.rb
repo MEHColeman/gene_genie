@@ -2,7 +2,7 @@ require_relative 'gene_factory'
 
 module GeneGenie
   class GenePool
-    def initialize(template, fitness_evaluator, gene_factory, size = nil)
+    def initialize(template, fitness_evaluator, gene_factory)
       unless template.instance_of? Hash
         fail ArgumentError, 'template must be a hash of ranges'
       end
@@ -18,7 +18,7 @@ module GeneGenie
     end
 
     def self.build(template, fitness_evaluator)
-      gene_factory = GeneFactory.new(template)
+      gene_factory = GeneFactory.new(template, fitness_evaluator)
       GenePool.new(template, fitness_evaluator, gene_factory)
     end
 

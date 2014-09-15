@@ -2,22 +2,10 @@ require 'minitest_helper'
 require 'gene_genie/gene_pool'
 
 module GeneGenie
-
   describe GenePool do
-    let(:template) do
-      { a: 1..10, b: 2..20 }
-    end
-
-    before do
-      @fitness_evaluator = Object.new
-      def @fitness_evaluator.fitness(params)
-        params.each_value.inject(:*)
-      end
-    end
-
     describe '.build' do
       it 'requires at least a template and fitness_evaluator' do
-        gene_pool = GenePool.build(template, @fitness_evaluator)
+        gene_pool = GenePool.build(sample_template, sample_fitness_evaluator)
 
         assert_kind_of GenePool, gene_pool
       end
@@ -26,7 +14,7 @@ module GeneGenie
         template = :not_a_hash_of_ranges
 
         assert_raises(ArgumentError) do
-          gene_pool = GenePool.build(template, @fitness_evaluator)
+          GenePool.build(template, sample_fitness_evaluator)
         end
       end
 
@@ -34,7 +22,7 @@ module GeneGenie
         fitness_evaluator = Object.new
 
         assert_raises(ArgumentError) do
-          gene_pool = GenePool.build(template, fitness_evaluator)
+          GenePool.build(sample_template, fitness_evaluator)
         end
       end
     end
@@ -43,14 +31,11 @@ module GeneGenie
       it 'uses a GeneFactory to create a population of suitable Genes' do
         gene_factory = MiniTest::Mock.new
         gene_factory.expect :create, [], [10]
-        gene_pool = GenePool.new(template, @fitness_evaluator, gene_factory)
-
+        gene_pool = GenePool.new(sample_template,
+                                 sample_fitness_evaluator,
+                                 gene_factory)
         gene_factory.verify
       end
-      it 'also injects a template analyser' do
-
-      end
     end
-
   end
 end
