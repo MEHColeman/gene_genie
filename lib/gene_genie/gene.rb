@@ -14,7 +14,7 @@ module GeneGenie
     end
 
     def fitness
-      @fitness_evaluator.fitness(@information)
+      @fitness ||= @fitness_evaluator.fitness(@information)
     end
   end
 end
