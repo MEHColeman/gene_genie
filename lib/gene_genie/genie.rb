@@ -1,3 +1,5 @@
+require_relative 'gene_pool'
+
 # Namespace for GeneGenie genetic algorithm optimisation gem
 # @since 0.0.1
 module GeneGenie
@@ -10,7 +12,7 @@ module GeneGenie
     def initialize(template, fitness_evaluator)
       @template = template
       @fitness_evaluator = fitness_evaluator
-      # @gene_pool = GenePool.build(template, fitness_evaluator)
+      @gene_pool = GenePool.build(template, fitness_evaluator)
     end
 
     # Optimise the genes until the convergence criteria are met.
@@ -28,11 +30,11 @@ module GeneGenie
     alias_method :optimize, :optimise
 
     def best
-      Hash.new
+      @gene_pool.best.to_hash
     end
 
     def best_fitness
-      @best_fitness ||= @fitness_evaluator.fitness(best)
+      @best_fitness ||= @gene_pool.best.fitness
     end
   end
 end

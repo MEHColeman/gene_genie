@@ -31,16 +31,25 @@ module GeneGenie
       end
 
       it "returns false if it doesn't improve current best_fitness" do
-        first_fitness = genie.best_fitness
-        def sample_fitness_evaluator.fitness(_)
-          20
+        changing_fitness_evaluator = Class.new do
+          def self.fitness(_)
+            1
+          end
         end
+        genie = Genie.new(sample_template, changing_fitness_evaluator)
+
+        first_fitness = genie.best_fitness
+
+        def changing_fitness_evaluator.fitness(_)
+          20000000
+        end
+
         assert_equal true, genie.optimise(1)
 
         second_fitness = genie.best_fitness
         assert second_fitness > first_fitness
 
-        def sample_fitness_evaluator.fitness(_)
+        def changing_fitness_evaluator.fitness(_)
           10
         end
         assert_equal false, genie.optimise(1)
