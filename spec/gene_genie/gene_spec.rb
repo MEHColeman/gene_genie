@@ -4,7 +4,7 @@ require 'gene_genie/gene'
 # The Gene class contains a specific set omodule GeneGenie
 module GeneGenie
   describe Gene do
-    let :information do { a: 10 } end
+    let(:information) { { a: 10 } }
     let :fitness_evaluator do
       fitness_evaluator = MiniTest::Mock.new
       fitness_evaluator.expect :fitness, 1, [information]
