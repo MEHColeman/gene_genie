@@ -16,32 +16,19 @@ module GeneGenie
 
     describe '#optimise' do
       it 'returns true when it improves current best_fitness' do
-        changing_fitness_evaluator = Class.new do
-          def self.fitness(_)
-            1
-          end
-        end
+        changing_fitness_evaluator = TailoredFitnessEvaluator.new(1)
 
         genie = Genie.new(sample_template, changing_fitness_evaluator)
-
         first_fitness = genie.best_fitness
-
-        def changing_fitness_evaluator.fitness(_)
-          2
-        end
+        changing_fitness_evaluator.set_fitness(2)
 
         assert_equal true, genie.optimise(1)
       end
 
       it "returns false when it doesn't improve current best_fitness" do
-        unchanging_fitness_evaluator = Class.new do
-          def self.fitness(_)
-            1
-          end
-        end
+        unchanging_fitness_evaluator = TailoredFitnessEvaluator.new(1)
 
         genie = Genie.new(sample_template, unchanging_fitness_evaluator)
-
         first_fitness = genie.best_fitness
 
         assert_equal false, genie.optimise(1)
