@@ -15,51 +15,50 @@ module GeneGenie
     end
 
     describe '#optimise' do
-      it 'returns true when it successfully optimises' do
-        # assuming such a basic optimisation will work every time
-        assert_equal true, genie.optimise
-      end
-
-      it 'optimises' do
-        assert_equal true, genie.optimise, "didn't improve"
-        assert_equal true, genie.best_fitness > (90 * 90),
-                     "didn't find a good result"
-      end
-
-      it 'also optimizes' do
-        assert_equal true, genie.respond_to?(:optimize), 'optimize variant not recognised'
-      end
-
-      it "returns false if it doesn't improve current best_fitness" do
+      it 'returns true when it improves current best_fitness' do
         changing_fitness_evaluator = Class.new do
           def self.fitness(_)
             1
           end
         end
+
         genie = Genie.new(sample_template, changing_fitness_evaluator)
 
         first_fitness = genie.best_fitness
 
         def changing_fitness_evaluator.fitness(_)
-          20000000
+          2
         end
 
         assert_equal true, genie.optimise(1)
+      end
 
-        second_fitness = genie.best_fitness
-        assert second_fitness > first_fitness
-
-        def changing_fitness_evaluator.fitness(_)
-          10
+      it "returns false when it doesn't improve current best_fitness" do
+        unchanging_fitness_evaluator = Class.new do
+          def self.fitness(_)
+            1
+          end
         end
-        assert_equal false, genie.optimise(1)
 
-        third_fitness = genie.best_fitness
-        assert third_fitness < second_fitness
+        genie = Genie.new(sample_template, unchanging_fitness_evaluator)
+
+        first_fitness = genie.best_fitness
+
+        assert_equal false, genie.optimise(1)
       end
 
       it 'takes an optional number_of_generations argument' do
         assert_equal true, genie.optimise(10)
+      end
+
+      it 'optimises' do
+        assert_equal true, genie.optimise, "didn't improve"
+        assert_equal true, genie.best_fitness > (90 * 90),
+          "didn't find a good result"
+      end
+
+      it 'also optimizes' do
+        assert_equal true, genie.respond_to?(:optimize), 'optimize variant not recognised'
       end
     end
 
@@ -83,7 +82,7 @@ module GeneGenie
         optimised_many_fitness = sample_fitness_evaluator.fitness(optimised_many)
 
         assert_equal true, initial_best_fitness < optimised_many_fitness,
-                           'fitness did not improve'
+          'fitness did not improve'
         # this test might not always pass. #statistics
       end
     end
