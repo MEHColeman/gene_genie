@@ -27,7 +27,7 @@ module GeneGenie
       end
 
       it 'also optimizes' do
-        assert_equal true, genie.optimize, 'optimize variant not recognised'
+        assert_equal true, genie.respond_to?(:optimize), 'optimize variant not recognised'
       end
 
       it "returns false if it doesn't improve current best_fitness" do
