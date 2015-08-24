@@ -4,8 +4,6 @@
 
 # Gene Genie
 
-This isn't even nearly ready yet.
-
 Hey, I wrote a genetic algorithm gem. Goals:
     * Have fun
     * Be easy and intuitive to use
@@ -48,6 +46,8 @@ If you use the simple genie interface, the genetic algorithm will come up with a
 * Population size
 * Gene pools
 * Initialisation
+* Optimisation Criteria
+
 Custom objects for crossover, gene selection, etc.
 
 ## Contributing
