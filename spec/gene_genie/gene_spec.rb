@@ -9,6 +9,14 @@ module GeneGenie
       fitness_evaluator = MiniTest::Mock.new
       fitness_evaluator.expect :fitness, 1, [information]
     end
+    let :higher_fitness_evaluator do
+      fitness_evaluator = MiniTest::Mock.new
+      fitness_evaluator.expect :fitness, 2, [information]
+    end
+    let :lower_fitness_evaluator do
+      fitness_evaluator = MiniTest::Mock.new
+      fitness_evaluator.expect :fitness, 0, [information]
+    end
 
     subject { Gene.new(information, fitness_evaluator) }
 
@@ -30,6 +38,14 @@ module GeneGenie
         assert_equal 1, subject.fitness
         fitness_evaluator.verify
       end
+    end
+
+    it "can compare it's fitness with other genes" do
+       better_gene = Gene.new(information, higher_fitness_evaluator)
+       assert_equal -1, subject <=> better_gene
+
+       worse_gene = Gene.new(information, lower_fitness_evaluator)
+       assert_equal 1, subject <=> worse_gene
     end
   end
 end
