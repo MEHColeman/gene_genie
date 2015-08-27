@@ -47,5 +47,18 @@ module GeneGenie
        worse_gene = Gene.new(information, lower_fitness_evaluator)
        assert_equal 1, subject <=> worse_gene
     end
+
+    describe '#mutate' do
+      it 'uses the provided mutator to change the its internal information' do
+        altered_hash = { b: 2 }
+        mutator = MiniTest::Mock.new
+        mutator.expect :call, altered_hash, [information]
+
+        subject.mutate(mutator)
+
+        mutator.verify
+        assert_equal altered_hash, subject.to_hash
+      end
+    end
   end
 end

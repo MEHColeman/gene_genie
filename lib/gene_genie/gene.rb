@@ -17,6 +17,10 @@ module GeneGenie
       @fitness ||= @fitness_evaluator.fitness(@information)
     end
 
+    def mutate(mutator)
+      @information = mutator.call @information
+    end
+
     def <=>(gene)
       fitness <=> gene.fitness
     end
