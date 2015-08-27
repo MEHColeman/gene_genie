@@ -55,11 +55,11 @@ module GeneGenie
     end
 
     it "can compare it's fitness with other genes" do
-       better_gene = Gene.new(information, higher_fitness_evaluator)
-       assert_equal -1, subject <=> better_gene
+      better_gene = Gene.new(information, higher_fitness_evaluator)
+      assert_equal -1, subject <=> better_gene
 
-       worse_gene = Gene.new(information, lower_fitness_evaluator)
-       assert_equal 1, subject <=> worse_gene
+      worse_gene = Gene.new(information, lower_fitness_evaluator)
+      assert_equal 1, subject <=> worse_gene
     end
 
     describe '#mutate' do
