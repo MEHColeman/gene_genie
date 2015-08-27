@@ -4,7 +4,12 @@ require 'gene_genie/gene'
 # The Gene class contains a specific set omodule GeneGenie
 module GeneGenie
   describe Gene do
-    let(:information) { { a: 10 } }
+    let(:information) { {
+      a: 10,
+      b: 20,
+      c: 30,
+      d: 40,
+    } }
     let :fitness_evaluator do
       fitness_evaluator = MiniTest::Mock.new
       fitness_evaluator.expect :fitness, 1, [information]
@@ -17,6 +22,15 @@ module GeneGenie
       fitness_evaluator = MiniTest::Mock.new
       fitness_evaluator.expect :fitness, 0, [information]
     end
+
+    let(:second_information) { {
+      a: 11,
+      b: 21,
+      c: 31,
+      d: 41,
+    } }
+
+    let(:second_gene) { Gene.new(second_information, fitness_evaluator) }
 
     subject { Gene.new(information, fitness_evaluator) }
 
@@ -58,6 +72,17 @@ module GeneGenie
 
         mutator.verify
         assert_equal altered_hash, subject.to_hash
+      end
+    end
+
+    describe '#combine' do
+      it 'combines information from the specified gene to create a new gene' do
+        new_gene_hash = subject.combine(second_gene).to_hash
+
+        assert new_gene_hash[:a] == 10 || new_gene_hash[:a] == 11
+        assert new_gene_hash[:b] == 20 || new_gene_hash[:b] == 21
+        assert new_gene_hash[:c] == 30 || new_gene_hash[:c] == 31
+        assert new_gene_hash[:d] == 40 || new_gene_hash[:d] == 41
       end
     end
   end

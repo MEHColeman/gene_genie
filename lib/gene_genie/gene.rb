@@ -21,6 +21,13 @@ module GeneGenie
       @information = mutator.call @information
     end
 
+    def combine(other_gene)
+      other_gene_hash = other_gene.to_hash
+      @information.each do | k, v |
+        @information[k] = other_gene_hash[k] if(rand > 0.5)
+      end
+    end
+
     def <=>(gene)
       fitness <=> gene.fitness
     end
