@@ -2,7 +2,6 @@ require_relative 'gene_factory'
 require_relative 'mutator/simple_gene_mutator'
 require_relative 'mutator/null_mutator'
 
-
 module GeneGenie
   class GenePool
     def initialize(template, fitness_evaluator, gene_factory,

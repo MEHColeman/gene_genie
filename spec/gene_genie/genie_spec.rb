@@ -65,6 +65,7 @@ module GeneGenie
         initial_best_fitness = sample_fitness_evaluator.fitness(initial_best)
 
         genie.optimise
+
         optimised_many = genie.best
         optimised_many_fitness = sample_fitness_evaluator.fitness(optimised_many)
 
