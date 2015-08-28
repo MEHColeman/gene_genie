@@ -72,7 +72,7 @@ module GeneGenie
           end
         end
       end
-    [first, second]
+      [first, second]
     end
 
     def combine_genes(first, second)
