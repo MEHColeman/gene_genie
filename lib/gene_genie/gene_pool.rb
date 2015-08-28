@@ -57,7 +57,7 @@ module GeneGenie
     def select_genes
       selectees = @pool.sort.reverse
       first, second = nil, nil
-      probability =  [(( 1/size ) * 3), 0.8].max
+      probability =  [(( 1.0/size ) * 3), 0.8].min
       while !first || !second do
         selectees.each do |s|
           if rand < probability
