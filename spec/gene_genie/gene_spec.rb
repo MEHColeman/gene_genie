@@ -84,6 +84,10 @@ module GeneGenie
         assert new_gene_hash[:c] == 30 || new_gene_hash[:c] == 31
         assert new_gene_hash[:d] == 40 || new_gene_hash[:d] == 41
       end
+
+      it 'returns a Gene' do
+        assert_kind_of Gene, subject.combine(second_gene)
+      end
     end
   end
 end
