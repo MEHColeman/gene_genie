@@ -11,7 +11,7 @@ module GeneGenie
   class Genie
 
     DEFAULT_NO_OF_GENERATIONS = 50
-    IMPROVEMENT_THRESHOLD = 2 # %
+    IMPROVEMENT_THRESHOLD = 0.1 # %
 
     def initialize(template, fitness_evaluator)
       @template = template
@@ -52,10 +52,15 @@ module GeneGenie
     end
 
     def optimise_by_strategy
-      50.times do
+      DEFAULT_NO_OF_GENERATIONS.times do
         current_fitness = best_fitness
         @gene_pool.evolve
-        break if best_fitness < current_fitness * 1.02
+      end
+      DEFAULT_NO_OF_GENERATIONS.times do
+        current_fitness = best_fitness
+        @gene_pool.evolve
+        break if best_fitness < current_fitness *
+          (1 + (IMPROVEMENT_THRESHOLD / 100 ))
       end
     end
   end
