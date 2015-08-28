@@ -35,11 +35,12 @@ module GeneGenie
       end
 
       it 'takes an optional number_of_generations argument' do
-        assert_equal true, genie.optimise(10)
+        genie.optimise(10)
+        # evolve should be called on genepool 10 times
       end
 
       it 'optimises' do
-        assert_equal true, genie.optimise, "didn't improve"
+        assert_equal true, genie.optimise(2000), "didn't improve"
         assert_equal true, genie.best_fitness > (90 * 90),
           "didn't find a good result"
       end
