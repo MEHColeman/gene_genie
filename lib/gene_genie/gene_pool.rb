@@ -56,7 +56,7 @@ module GeneGenie
     # a very simple selection - pick by sorted order
     # pick two different genes
     def select_genes
-      selectees = @pool.sort
+      selectees = @pool.sort.reverse
       first, second = nil, nil
       probability =  [(( 1/size ) * 3), 0.8].max
       while !first || !second do
