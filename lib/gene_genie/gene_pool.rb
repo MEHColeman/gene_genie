@@ -39,5 +39,44 @@ module GeneGenie
     def best
       @pool.max_by { |gene| gene.fitness }
     end
+
+    def evolve
+      old_best_fitness = best.fitness
+      new_pool = []
+      size.times do
+        first_gene, second_gene = select_genes
+        new_gene = combine_genes(first_gene, second_gene)
+        new_pool << new_gene.mutate(@mutator)
+      end
+      @pool = new_pool
+      best.fitness > old_best_fitness
+    end
+
+    private
+    # a very simple selection - pick by sorted order
+    # pick two different genes
+    def select_genes
+      selectees = @pool.sort
+      first, second = nil, nil
+      probability =  [(( 1/size ) * 3), 0.8].max
+      while !first || !second do
+        selectees.each do |s|
+          if rand < probability
+            selectees.delete(s)
+            if !first
+              first = s
+              break
+            else
+              second = s
+            end
+          end
+        end
+      end
+    [first, second]
+    end
+
+    def combine_genes(first, second)
+      first.combine(second)
+    end
   end
 end

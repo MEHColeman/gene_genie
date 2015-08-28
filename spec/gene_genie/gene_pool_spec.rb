@@ -3,6 +3,9 @@ require 'gene_genie/gene_pool'
 
 module GeneGenie
   describe GenePool do
+
+    subject { GenePool.build(sample_template, sample_fitness_evaluator) }
+
     describe '.build' do
       it 'requires at least a template and fitness_evaluator' do
         gene_pool = GenePool.build(sample_template, sample_fitness_evaluator)
@@ -50,6 +53,22 @@ module GeneGenie
                                  sample_fitness_evaluator,
                                  gene_factory)
         assert_equal c, gene_pool.best
+      end
+    end
+
+    describe '#evolve' do
+      it 'returns a boolean indicating whether the best gene has improved' do
+        old_best_fitness = subject.best.fitness
+        result = subject.evolve
+        if subject.best.fitness > old_best_fitness
+          assert result
+        else
+          refute result
+        end
+      end
+
+      it 'combines genes based on their score to create a new set of genes' do
+         # pending
       end
     end
   end
