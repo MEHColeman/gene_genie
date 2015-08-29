@@ -1,10 +1,11 @@
 require_relative 'gene_factory'
 require_relative 'mutator/simple_gene_mutator'
 require_relative 'mutator/null_mutator'
+require_relative 'template_evaluator'
 
 module GeneGenie
   class GenePool
-    def initialize(template, fitness_evaluator, gene_factory,
+    def initialize(template, fitness_evaluator, gene_factory, size = 10,
                    mutator = NullMutator.new)
       unless template.instance_of? Hash
         fail ArgumentError, 'template must be a hash of ranges'
@@ -17,17 +18,21 @@ module GeneGenie
       @fitness_evaluator = fitness_evaluator
       @mutator = mutator
 
-      #size = template_evaluator.recommended_size
-      size ||= 10
       @pool = gene_factory.create(size)
     end
 
     # build a GenePool with a reasonable set of defaults.
     # You only need to specily the minimum no. of parameters
     def self.build(template, fitness_evaluator)
+      unless template.instance_of? Hash
+        fail ArgumentError, 'template must be a hash of ranges'
+      end
       gene_mutator = SimpleGeneMutator.new(template)
       gene_factory = GeneFactory.new(template, fitness_evaluator)
-      GenePool.new(template, fitness_evaluator, gene_factory,
+
+      template_evaluator =  TemplateEvaluator.new(template)
+      size = template_evaluator.recommended_size
+      GenePool.new(template, fitness_evaluator, gene_factory, size,
                    gene_mutator)
     end
 
