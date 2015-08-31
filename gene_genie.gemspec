@@ -1,6 +1,3 @@
-      unless template.instance_of? Hash
-        fail ArgumentError, 'template must be a hash of ranges'
-      end
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
