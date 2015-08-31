@@ -12,6 +12,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Optimise anything that responds to 'fitness' and takes a hash}
   spec.homepage      = 'https://github.com/MEHColeman/gene_genie'
   spec.license       = 'MIT'
+  spec.required_ruby_version = '>=2.0.0'
 
   spec.files         = Dir.glob("{lib}/**/*") + ['README.md']
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
