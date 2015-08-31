@@ -1,3 +1,6 @@
+      unless template.instance_of? Hash
+        fail ArgumentError, 'template must be a hash of ranges'
+      end
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
@@ -9,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Mark Coleman']
   spec.email         = ['m@rkcoleman.co.uk']
   spec.summary       = %q{Genetic algorithm optimisation gem}
-  spec.description   = %q{JUST A PROTOTYPE WORK IN PROGRESS! Optimise anything that responds to 'fitness' and takes a hash}
+  spec.description   = %q{Optimise anything that responds to 'fitness' and takes a hash}
   spec.homepage      = 'https://github.com/MEHColeman/gene_genie'
   spec.license       = 'MIT'
 
