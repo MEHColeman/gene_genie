@@ -5,9 +5,9 @@
 # Gene Genie
 
 Hey, I wrote a genetic algorithm gem. Goals:
-    * Have fun
-    * Be easy and intuitive to use
-    * Be open to extension and experimentation
+* Have fun
+* Be easy and intuitive to use
+* Be open to extension and experimentation
 
 ## Installation
 
