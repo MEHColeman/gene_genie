@@ -52,7 +52,6 @@ module GeneGenie
 
     def optimise_by_strategy
       DEFAULT_NO_OF_GENERATIONS.times do
-        current_fitness = best_fitness
         @gene_pool.evolve
       end
       DEFAULT_NO_OF_GENERATIONS.times do
