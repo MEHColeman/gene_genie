@@ -3,13 +3,11 @@ require_relative 'gene_pool'
 # Namespace for GeneGenie genetic algorithm optimisation gem
 # @since 0.0.1
 module GeneGenie
-
   # Top level, basic interface for GA optimisation.
   # Genie will attempt to optimise based on best-guess defaults if none are
   # provided
   # @since 0.0.1
   class Genie
-
     DEFAULT_NO_OF_GENERATIONS = 50
     IMPROVEMENT_THRESHOLD = 0.1 # %
 
@@ -47,6 +45,7 @@ module GeneGenie
     end
 
     private
+
     def evolve_n_times(n)
       n.times { @gene_pool.evolve }
     end
@@ -60,7 +59,7 @@ module GeneGenie
         current_fitness = best_fitness
         @gene_pool.evolve
         break if best_fitness < current_fitness *
-          (1 + (IMPROVEMENT_THRESHOLD / 100 ))
+          (1 + (IMPROVEMENT_THRESHOLD / 100))
       end
     end
   end
