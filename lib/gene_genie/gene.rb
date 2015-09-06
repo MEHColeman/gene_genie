@@ -25,8 +25,8 @@ module GeneGenie
     def combine(other_gene)
       other_gene_hash = other_gene.to_hash
       new_hash = {}
-      @information.each do | k, v |
-        new_hash[k] = (rand > 0.5) ? @information[k] : other_gene_hash[k]
+      @information.each do |k, v|
+        new_hash[k] = (rand > 0.5) ? v : other_gene_hash[k]
       end
       Gene.new(new_hash, @fitness_evaluator)
     end
