@@ -31,8 +31,8 @@ module GeneGenie
       Gene.new(new_hash, @fitness_evaluator)
     end
 
-    def <=>(gene)
-      fitness <=> gene.fitness
+    def <=>(other)
+      fitness <=> other.fitness
     end
   end
 end
