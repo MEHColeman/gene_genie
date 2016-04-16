@@ -1,0 +1,1 @@
+add a .build method to GeneGenie, the same as GenePool, to create a genie with a default convergence criteria model
