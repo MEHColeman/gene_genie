@@ -1,5 +1,5 @@
 def sample_template
-  { a: 1..100, b: 2..100 }
+  [{ a: 1..100, b: 2..100 }]
 end
 
 def sample_fitness_evaluator

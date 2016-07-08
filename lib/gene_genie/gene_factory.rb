@@ -15,21 +15,25 @@ module GeneGenie
     def create(size = 1)
       genes = []
       size.times do
-        hash = create_hash_from_template
-        genes << Gene.new(hash, @fitness_evaluator)
+        genes << create_gene_from_template
       end
-
       genes
     end
 
     private
 
-    def create_hash_from_template
+    def create_gene_from_template
+      gene_array = @template.map do |part|
+        create_hash_from_template_part(part)
+      end
+      Gene.new(gene_array, @fitness_evaluator)
+    end
+
+    def create_hash_from_template_part(part)
       new_hash = {}
-      @template.each do |k, v|
+      part.each do |k, v|
         new_hash[k] = rand(v)
       end
-
       new_hash
     end
   end
