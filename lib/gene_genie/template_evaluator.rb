@@ -8,7 +8,9 @@ module GeneGenie
     end
 
     def permutations
-      @permutations ||= @template.map{|k,v| v.size}.reduce(:*)
+      @permutations ||= @template.map { |hash|
+        hash.map { |_, v| v.size }.reduce(:*)
+      }.reduce(:*)
     end
 
     # returns a minimum of 10 unless the total number of permutations
@@ -17,10 +19,9 @@ module GeneGenie
     # maximum of 1000
     def recommended_size
       [
-        [(permutations / 1000), 1000].min,
-        [ 10, permutations ].min,
+        [(permutations / 1000), 5000].min,
+        [10, permutations].min,
       ].max
     end
-
   end
 end

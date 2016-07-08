@@ -2,35 +2,40 @@ require 'minitest_helper'
 require 'gene_genie/template_evaluator'
 
 module GeneGenie
-
   describe TemplateEvaluator do
     subject { TemplateEvaluator.new(sample_template) }
 
-    let (:tiny_check_template) { {
-      a: 1..3,
-    } }
-    let (:tiny_check_evaluator) { TemplateEvaluator.new(tiny_check_template) }
+    let(:tiny_check_template) { [{ a: 1..3 }] }
+    let(:tiny_check_evaluator) { TemplateEvaluator.new(tiny_check_template) }
 
-    let (:normal_check_template) { {
-      a: 1..3,
-      b: 1..10,
-      c: 3..5,
-      d: 10..20,
-      e: 35..45,
-      f: 0..9,
-      g: 1..1,
-    } }
-    let (:normal_check_evaluator) { TemplateEvaluator.new(normal_check_template) }
+    let(:normal_check_template) {
+      [{
+        a: 1..3,
+        b: 1..10,
+        c: 3..5,
+        d: 10..20
+      },
+      {
+        e: 35..45,
+        f: 0..9,
+        g: 1..1,
+      }]
+    }
+    let(:normal_check_evaluator) { TemplateEvaluator.new(normal_check_template) }
 
-    let (:huge_check_template) { {
-      a: 1..3,
-      b: 1..10,
-      c: 3..5,
-      d: 1..200,
-      e: 1..500,
-      f: 300..800,
-    } }
-    let (:huge_check_evaluator) { TemplateEvaluator.new(huge_check_template) }
+    let(:huge_check_template) {
+      [{
+        a: 1..3,
+        b: 1..10,
+        c: 3..5
+      },
+      {
+        d: 1..200,
+        e: 1..500,
+        f: 300..800,
+      }]
+    }
+    let(:huge_check_evaluator) { TemplateEvaluator.new(huge_check_template) }
 
     describe 'initialize' do
       it 'takes a template' do
@@ -61,11 +66,9 @@ module GeneGenie
         assert_equal 10, subject.recommended_size
       end
 
-      it 'returns a maximum of 1000' do
-        assert_equal 1000, huge_check_evaluator.recommended_size
+      it 'returns a maximum of 5000' do
+        assert_equal 5000, huge_check_evaluator.recommended_size
       end
     end
-
-
   end
 end
