@@ -37,7 +37,7 @@ module GeneGenie
     alias_method :optimize, :optimise
 
     def best
-      @gene_pool.best.to_hash
+      @gene_pool.best.to_hashes
     end
 
     def best_fitness

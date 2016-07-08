@@ -7,8 +7,8 @@ module GeneGenie
   class GenePool
     def initialize(template, fitness_evaluator, gene_factory, size = 10,
                    mutator = NullMutator.new)
-      unless template.instance_of? Hash
-        fail ArgumentError, 'template must be a hash of ranges'
+      unless (template.instance_of? Array) && (template[0].instance_of? Hash) then
+        fail ArgumentError, 'template must be an array of hashes of ranges'
       end
       unless fitness_evaluator.respond_to?(:fitness)
         fail ArgumentError, 'fitness_evaluator must respond to fitness'
