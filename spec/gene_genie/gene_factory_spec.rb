@@ -20,8 +20,14 @@ module GeneGenie
       it 'returns an array of genes of the specified size' do
         assert_equal 4, subject.create(4).size
       end
-
+      it 'can take a template of an array of hashes' do
+        template = [{ a: 1..100, b: 2..100 },
+                    { c:1..1000, d: 4..8},
+                    { e:0..1,    f: 1..9}]
+        test_subject = GeneFactory.new(template, sample_fitness_evaluator)
+        genes = test_subject.create(30)
+        assert_equal 100, test_subject.create(100).size
+      end
     end
-
   end
 end

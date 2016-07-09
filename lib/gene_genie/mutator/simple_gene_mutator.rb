@@ -9,13 +9,15 @@ module GeneGenie
       @mutation_rate = mutation_rate
     end
 
-    def call(hash)
-      hash.each do |k, v|
-        if rand < @mutation_rate
-          hash[k] = rand(@template[k])
+    def call(genes)
+      genes.each_with_index do |hash, index|
+        hash.each do |k, v|
+          if rand < @mutation_rate
+            hash[k] = rand(@template[index][k])
+          end
         end
       end
-      hash
+      genes
     end
   end
 end

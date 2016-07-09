@@ -31,17 +31,16 @@ module GeneGenie
       end
 
       @best_fitness = @fitness_evaluator.fitness(best)
-
       @best_fitness > previous_best
     end
     alias_method :optimize, :optimise
 
     def best
-      @gene_pool.best.to_hash
+      @gene_pool.best_ever.to_hashes
     end
 
     def best_fitness
-      @gene_pool.best.fitness
+      @gene_pool.best_ever.fitness
     end
 
     private

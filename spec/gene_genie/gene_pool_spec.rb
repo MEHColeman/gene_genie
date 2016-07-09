@@ -3,7 +3,6 @@ require 'gene_genie/gene_pool'
 
 module GeneGenie
   describe GenePool do
-
     subject { GenePool.build(sample_template, sample_fitness_evaluator) }
 
     describe '.build' do
@@ -43,8 +42,8 @@ module GeneGenie
 
     describe '#best' do
       it 'returns the gene with the highest fitness' do
-        a = b = Gene.new({ a: 1, b: 1 }, sample_fitness_evaluator)
-        c = Gene.new({ a: 10, b: 10 }, sample_fitness_evaluator)
+        a = b = Gene.new([{ a: 1, b: 1 }], sample_fitness_evaluator)
+        c = Gene.new([{ a: 10, b: 10 }], sample_fitness_evaluator)
 
         gene_factory = MiniTest::Mock.new
         gene_factory.expect :create, [a, b, c], [10]
@@ -68,7 +67,7 @@ module GeneGenie
       end
 
       it 'combines genes based on their score to create a new set of genes' do
-         # pending
+        # pending
       end
     end
   end

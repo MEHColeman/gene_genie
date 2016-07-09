@@ -3,7 +3,7 @@ require 'gene_genie/mutator/simple_gene_mutator'
 
 module GeneGenie
   describe SimpleGeneMutator do
-    let(:template) { {
+    let(:template) { [{
       a: 1..1000,
       b: 1..1000,
       c: 1..1000,
@@ -11,11 +11,11 @@ module GeneGenie
       e: 1..1000,
       f: 1..1000,
       g: 1..1000,
-    } }
+    }] }
 
     let(:mutation_rate) { 0.5 }
 
-    let(:valid_hash) { {
+    let(:valid_hash) { [{
       a: 100,
       b: 200,
       c: 300,
@@ -23,7 +23,7 @@ module GeneGenie
       e: 500,
       f: 600,
       g: 700,
-    } }
+    }] }
 
     subject { SimpleGeneMutator.new(template, mutation_rate) }
 
@@ -45,6 +45,5 @@ module GeneGenie
         # pending
       end
     end
-
   end
 end

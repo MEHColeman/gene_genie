@@ -51,13 +51,16 @@ module GeneGenie
     end
 
     describe '#best' do
-      it 'returns a Hash, conforming to the supplied template' do
+      it 'returns an Array of Hashes, conforming to the supplied template' do
         optimised = genie.best
-        assert_kind_of Hash, optimised
-        sample_template.each do |k, v|
-          refute_nil optimised[k]
-          assert_equal true, optimised[k] >= v.min
-          assert_equal true, optimised[k] <= v.max
+        assert_kind_of Array, optimised
+        assert_kind_of Hash, optimised[0]
+        sample_template.each_with_index do |h, index|
+          h.each do |k, v|
+            refute_nil optimised[index][k]
+            assert_equal true, optimised[index][k] >= v.min
+            assert_equal true, optimised[index][k] <= v.max
+          end
         end
       end
 
