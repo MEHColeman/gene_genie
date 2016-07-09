@@ -17,7 +17,7 @@ module GeneGenie
           end
         end
       end
-      hash
+      genes
     end
   end
 end
