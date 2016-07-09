@@ -67,7 +67,7 @@ module GeneGenie
       end
 
       it 'combines genes based on their score to create a new set of genes' do
-         # pending
+        # pending
       end
     end
   end

@@ -30,7 +30,7 @@ module GeneGenie
       gene_mutator = SimpleGeneMutator.new(template)
       gene_factory = GeneFactory.new(template, fitness_evaluator)
 
-      template_evaluator =  TemplateEvaluator.new(template)
+      template_evaluator = TemplateEvaluator.new(template)
       size = template_evaluator.recommended_size
       GenePool.new(template, fitness_evaluator, gene_factory, size,
                    gene_mutator)
@@ -75,7 +75,7 @@ module GeneGenie
     def select_genes
       selectees = @pool.sort.reverse
       first, second = nil, nil
-      probability =  [(( 1.0/size ) * 3), 0.8].min
+      probability = [((1.0 / size) * 3), 0.8].min
       while !first || !second do
         selectees.each do |s|
           if rand < probability
