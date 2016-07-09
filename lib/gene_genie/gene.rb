@@ -22,6 +22,7 @@ module GeneGenie
 
     def mutate(mutator)
       @information = mutator.call @information
+      @fitness = nil
       self
     end
 
