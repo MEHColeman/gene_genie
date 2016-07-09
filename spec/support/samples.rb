@@ -5,7 +5,7 @@ end
 def sample_fitness_evaluator
   fitness_evaluator = Object.new
   def fitness_evaluator.fitness(params)
-    params.each_value.inject(:*) || 1
+    params.map { |hash| hash.each_value.reduce(:*) }.reduce(:*) || 1
   end
 
   fitness_evaluator
