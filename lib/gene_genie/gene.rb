@@ -33,6 +33,7 @@ module GeneGenie
         part.each do |k, v|
           new_hash[k] = (rand > 0.5) ? v : other_gene_hash[index][k]
         end
+        new_hash
       end
       Gene.new(new_information, @fitness_evaluator)
     end
