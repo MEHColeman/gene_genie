@@ -24,8 +24,8 @@ module GeneGenie
     # build a GenePool with a reasonable set of defaults.
     # You only need to specily the minimum no. of parameters
     def self.build(template, fitness_evaluator)
-      unless template.instance_of? Hash
-        fail ArgumentError, 'template must be a hash of ranges'
+      unless (template.instance_of? Array) && (template[0].instance_of? Hash)
+        fail ArgumentError, 'template must be an array of hashes of ranges'
       end
       gene_mutator = SimpleGeneMutator.new(template)
       gene_factory = GeneFactory.new(template, fitness_evaluator)
