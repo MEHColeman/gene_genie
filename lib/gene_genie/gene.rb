@@ -5,6 +5,9 @@ module GeneGenie
   # @since 0.0.1
   class Gene
     def initialize(information, fitness_evaluator)
+      fail ArgumentError, 'information must be Array' unless information.kind_of? Array
+      fail ArgumentError, 'information must be Array of Hashes' unless information[0].kind_of? Hash
+
       @information = information
       @fitness_evaluator = fitness_evaluator
     end

@@ -28,9 +28,18 @@ module GeneGenie
     subject { Gene.new(information, fitness_evaluator) }
 
     describe '#initialize' do
-      it 'is initialised with a hash and a fitness evaluator' do
+      it 'is initialised with an array of hashes and a fitness evaluator' do
         gene = Gene.new(information, fitness_evaluator)
         assert_kind_of Gene, gene
+      end
+
+      it 'raises an ArgumentError if information is not an Array of Hashes' do
+        assert_raises(ArgumentError) do
+          Gene.new({a:3}, fitness_evaluator)
+        end
+        assert_raises(ArgumentError) do
+          Gene.new([:a,:b], fitness_evaluator)
+        end
       end
     end
 
