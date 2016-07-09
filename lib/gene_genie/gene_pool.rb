@@ -41,7 +41,11 @@ module GeneGenie
     end
 
     def best
-      @pool.max_by { |gene| gene.fitness }
+      @pool.max_by(&:fitness)
+    end
+
+    def best_ever
+      @best_ever ||= best
     end
 
     def evolve
@@ -53,10 +57,19 @@ module GeneGenie
         new_pool << new_gene.mutate(@mutator)
       end
       @pool = new_pool
+
+      check_best_ever
       best.fitness > old_best_fitness
     end
 
     private
+
+    def check_best_ever
+      if best.fitness > best_ever.fitness
+        @best_ever = best
+      end
+    end
+
     # a very simple selection - pick by sorted order
     # pick two different genes
     def select_genes
