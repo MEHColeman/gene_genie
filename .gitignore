@@ -1,2 +1,4 @@
 Gemfile.local
 Gemfile.lock
+
+*.log
