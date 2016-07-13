@@ -70,5 +70,21 @@ module GeneGenie
         # pending
       end
     end
+
+    describe '#best_fitness' do
+      it 'returns the fitness of the best gene' do
+        a = b = Gene.new([{ a: 1, b: 1 }], sample_fitness_evaluator)
+        c = Gene.new([{ a: 10, b: 10 }], sample_fitness_evaluator)
+
+        gene_factory = MiniTest::Mock.new
+        gene_factory.expect :create, [a, b, c], [10]
+
+        gene_pool = GenePool.new(sample_template,
+                                 sample_fitness_evaluator,
+                                 gene_factory)
+
+        assert_equal 100, gene_pool.best_fitness
+      end
+    end
   end
 end

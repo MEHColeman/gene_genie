@@ -44,6 +44,10 @@ module GeneGenie
       @pool.max_by(&:fitness)
     end
 
+    def best_fitness
+      best.fitness
+    end
+
     def best_ever
       @best_ever ||= best
     end
