@@ -66,6 +66,10 @@ module GeneGenie
       best.fitness > old_best_fitness
     end
 
+    def average_fitness
+      fitness_values.reduce(:+) / @pool.size
+    end
+
     private
 
     def check_best_ever
@@ -98,6 +102,10 @@ module GeneGenie
 
     def combine_genes(first, second)
       first.combine(second)
+    end
+
+    def fitness_values
+      @pool.map(&:fitness)
     end
   end
 end
