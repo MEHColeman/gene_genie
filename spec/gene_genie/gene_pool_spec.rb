@@ -38,6 +38,29 @@ module GeneGenie
                      gene_factory)
         gene_factory.verify
       end
+
+      it 'takes an optional gene mutator' do
+        gene_mutator = Object.new
+        gene_factory = MiniTest::Mock.new
+        gene_factory.expect :create, [], [10]
+        GenePool.new(sample_template,
+                     sample_fitness_evaluator,
+                     gene_factory, 10,
+                     gene_mutator)
+      end
+
+      it 'takes an optional gene selector' do
+        gene_mutator = Object.new
+        gene_selector = Object.new
+        gene_factory = MiniTest::Mock.new
+        gene_factory.expect :create, [], [10]
+        GenePool.new(sample_template,
+                     sample_fitness_evaluator,
+                     gene_factory, 10,
+                     gene_mutator,
+                     gene_selector)
+
+      end
     end
 
     describe '#best' do
