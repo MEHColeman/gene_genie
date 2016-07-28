@@ -7,8 +7,12 @@ require_relative 'template_evaluator'
 
 module GeneGenie
   class GenePool
-    def initialize(template, fitness_evaluator, gene_factory, size = 10,
-                   mutator = NullMutator.new, selector = CoinFlipSelector.new)
+    def initialize(template:,
+                   fitness_evaluator:,
+                   gene_factory:,
+                   size: 10,
+                   mutator: NullMutator.new,
+                   selector: CoinFlipSelector.new)
       unless (template.instance_of? Array) && (template[0].instance_of? Hash) then
         fail ArgumentError, 'template must be an array of hashes of ranges'
       end
@@ -35,8 +39,11 @@ module GeneGenie
 
       template_evaluator = TemplateEvaluator.new(template)
       size = template_evaluator.recommended_size
-      GenePool.new(template, fitness_evaluator, gene_factory, size,
-                   gene_mutator)
+      GenePool.new(template: template,
+                   fitness_evaluator: fitness_evaluator,
+                   gene_factory: gene_factory,
+                   size: size,
+                   mutator: gene_mutator)
     end
 
     def size
