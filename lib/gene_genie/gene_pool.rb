@@ -80,6 +80,14 @@ module GeneGenie
       fitness_values.reduce(:+) / @pool.size
     end
 
+    def worst
+      @pool.min_by(&:fitness)
+    end
+
+    def worst_fitness
+      worst.fitness
+    end
+
     private
 
     def check_best_ever

@@ -81,6 +81,22 @@ module GeneGenie
       end
     end
 
+    describe '#worst' do
+      it 'returns the gene with the lowest fitness' do
+        a = Gene.new([{ a: 1, b: 1 }], sample_fitness_evaluator)
+        b = c = Gene.new([{ a: 10, b: 10 }], sample_fitness_evaluator)
+
+        gene_factory = MiniTest::Mock.new
+        gene_factory.expect :create, [a, b, c], [10]
+
+        gene_pool = GenePool.new(template: sample_template,
+                                 fitness_evaluator: sample_fitness_evaluator,
+                                 gene_factory: gene_factory)
+
+        assert_equal a, gene_pool.worst
+      end
+    end
+
     describe '#evolve' do
       it 'returns a boolean indicating whether the best gene has improved' do
         old_best_fitness = subject.best.fitness
@@ -110,6 +126,22 @@ module GeneGenie
                                  gene_factory: gene_factory)
 
         assert_equal 100, gene_pool.best_fitness
+      end
+    end
+
+    describe '#worst_fitness' do
+      it 'returns the fitness of the worst gene' do
+        a = Gene.new([{ a: 1, b: 1 }], sample_fitness_evaluator)
+        b = c = Gene.new([{ a: 10, b: 10 }], sample_fitness_evaluator)
+
+        gene_factory = MiniTest::Mock.new
+        gene_factory.expect :create, [a, b, c], [10]
+
+        gene_pool = GenePool.new(template: sample_template,
+                                 fitness_evaluator: sample_fitness_evaluator,
+                                 gene_factory: gene_factory)
+
+        assert_equal 1, gene_pool.worst_fitness
       end
     end
 
