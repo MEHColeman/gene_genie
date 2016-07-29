@@ -110,7 +110,6 @@ module GeneGenie
                                  gene_factory: gene_factory)
 
         assert_equal 201, gene_pool.total_fitness
-
       end
     end
 

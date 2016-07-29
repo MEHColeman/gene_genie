@@ -4,7 +4,6 @@ require_relative 'mutator/null_mutator'
 require_relative 'selector/coin_flip_selector'
 require_relative 'template_evaluator'
 
-
 module GeneGenie
   class GenePool
     def initialize(template:,
@@ -24,7 +23,6 @@ module GeneGenie
       @fitness_evaluator = fitness_evaluator
       @mutator = mutator
       @selector = selector
-
       @pool = gene_factory.create(size)
     end
 
