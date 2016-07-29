@@ -77,7 +77,15 @@ module GeneGenie
     end
 
     def average_fitness
-      fitness_values.reduce(:+) / @pool.size
+      total_fitness / @pool.size
+    end
+
+    def total_fitness
+      fitness_values.reduce(:+)
+    end
+
+    def genes
+      @pool
     end
 
     def worst

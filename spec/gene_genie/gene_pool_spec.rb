@@ -97,6 +97,13 @@ module GeneGenie
       end
     end
 
+    describe '#genes' do
+      it 'returns the araray of genes' do
+        assert_kind_of Array, subject.genes
+        assert_kind_of Gene, subject.genes[0]
+      end
+    end
+
     describe '#evolve' do
       it 'returns a boolean indicating whether the best gene has improved' do
         old_best_fitness = subject.best.fitness
