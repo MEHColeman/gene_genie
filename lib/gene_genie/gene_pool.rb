@@ -1,12 +1,17 @@
 require_relative 'gene_factory'
 require_relative 'mutator/simple_gene_mutator'
 require_relative 'mutator/null_mutator'
+require_relative 'selector/coin_flip_selector'
 require_relative 'template_evaluator'
 
 module GeneGenie
   class GenePool
-    def initialize(template, fitness_evaluator, gene_factory, size = 10,
-                   mutator = NullMutator.new)
+    def initialize(template:,
+                   fitness_evaluator:,
+                   gene_factory:,
+                   size: 10,
+                   mutator: NullMutator.new,
+                   selector: CoinFlipSelector.new)
       unless (template.instance_of? Array) && (template[0].instance_of? Hash) then
         fail ArgumentError, 'template must be an array of hashes of ranges'
       end
@@ -17,7 +22,7 @@ module GeneGenie
       @template = template
       @fitness_evaluator = fitness_evaluator
       @mutator = mutator
-
+      @selector = selector
       @pool = gene_factory.create(size)
     end
 
@@ -32,8 +37,11 @@ module GeneGenie
 
       template_evaluator = TemplateEvaluator.new(template)
       size = template_evaluator.recommended_size
-      GenePool.new(template, fitness_evaluator, gene_factory, size,
-                   gene_mutator)
+      GenePool.new(template: template,
+                   fitness_evaluator: fitness_evaluator,
+                   gene_factory: gene_factory,
+                   size: size,
+                   mutator: gene_mutator)
     end
 
     def size
@@ -67,7 +75,23 @@ module GeneGenie
     end
 
     def average_fitness
-      fitness_values.reduce(:+) / @pool.size
+      total_fitness / @pool.size
+    end
+
+    def total_fitness
+      fitness_values.reduce(:+)
+    end
+
+    def genes
+      @pool
+    end
+
+    def worst
+      @pool.min_by(&:fitness)
+    end
+
+    def worst_fitness
+      worst.fitness
     end
 
     private
@@ -78,26 +102,8 @@ module GeneGenie
       end
     end
 
-    # a very simple selection - pick by sorted order
-    # pick two different genes
     def select_genes
-      selectees = @pool.sort.reverse
-      first, second = nil, nil
-      probability = [((1.0 / size) * 3), 0.8].min
-      while !first || !second do
-        selectees.each do |s|
-          if rand < probability
-            selectees.delete(s)
-            if !first
-              first = s
-              break
-            else
-              second = s
-            end
-          end
-        end
-      end
-      [first, second]
+      @selector.call(self)
     end
 
     def combine_genes(first, second)

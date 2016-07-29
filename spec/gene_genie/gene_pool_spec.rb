@@ -33,10 +33,35 @@ module GeneGenie
       it 'uses a GeneFactory to create a population of suitable Genes' do
         gene_factory = MiniTest::Mock.new
         gene_factory.expect :create, [], [10]
-        GenePool.new(sample_template,
-                     sample_fitness_evaluator,
-                     gene_factory)
+        GenePool.new(template: sample_template,
+                     fitness_evaluator: sample_fitness_evaluator,
+                     gene_factory: gene_factory)
         gene_factory.verify
+      end
+
+      it 'takes an optional gene mutator' do
+        gene_mutator = Object.new
+        gene_factory = MiniTest::Mock.new
+        gene_factory.expect :create, [], [10]
+        GenePool.new(template: sample_template,
+                     fitness_evaluator: sample_fitness_evaluator,
+                     gene_factory: gene_factory,
+                     size: 10,
+                     mutator: gene_mutator)
+      end
+
+      it 'takes an optional gene selector' do
+        gene_mutator = Object.new
+        gene_selector = Object.new
+        gene_factory = MiniTest::Mock.new
+        gene_factory.expect :create, [], [10]
+        GenePool.new(template: sample_template,
+                     fitness_evaluator: sample_fitness_evaluator,
+                     gene_factory: gene_factory,
+                     size: 10,
+                     mutator: gene_mutator,
+                     selector: gene_selector)
+
       end
     end
 
@@ -48,10 +73,50 @@ module GeneGenie
         gene_factory = MiniTest::Mock.new
         gene_factory.expect :create, [a, b, c], [10]
 
-        gene_pool = GenePool.new(sample_template,
-                                 sample_fitness_evaluator,
-                                 gene_factory)
+        gene_pool = GenePool.new(template: sample_template,
+                                 fitness_evaluator: sample_fitness_evaluator,
+                                 gene_factory: gene_factory)
+
         assert_equal c, gene_pool.best
+      end
+    end
+
+    describe '#worst' do
+      it 'returns the gene with the lowest fitness' do
+        a = Gene.new([{ a: 1, b: 1 }], sample_fitness_evaluator)
+        b = c = Gene.new([{ a: 10, b: 10 }], sample_fitness_evaluator)
+
+        gene_factory = MiniTest::Mock.new
+        gene_factory.expect :create, [a, b, c], [10]
+
+        gene_pool = GenePool.new(template: sample_template,
+                                 fitness_evaluator: sample_fitness_evaluator,
+                                 gene_factory: gene_factory)
+
+        assert_equal a, gene_pool.worst
+      end
+    end
+
+    describe '#total_fitness' do
+      it 'returns the sum of all fitnesses in the pool' do
+        a = Gene.new([{ a: 1, b: 1 }], sample_fitness_evaluator)
+        b = c = Gene.new([{ a: 10, b: 10 }], sample_fitness_evaluator)
+
+        gene_factory = MiniTest::Mock.new
+        gene_factory.expect :create, [a, b, c], [10]
+
+        gene_pool = GenePool.new(template: sample_template,
+                                 fitness_evaluator: sample_fitness_evaluator,
+                                 gene_factory: gene_factory)
+
+        assert_equal 201, gene_pool.total_fitness
+      end
+    end
+
+    describe '#genes' do
+      it 'returns the araray of genes' do
+        assert_kind_of Array, subject.genes
+        assert_kind_of Gene, subject.genes[0]
       end
     end
 
@@ -79,11 +144,27 @@ module GeneGenie
         gene_factory = MiniTest::Mock.new
         gene_factory.expect :create, [a, b, c], [10]
 
-        gene_pool = GenePool.new(sample_template,
-                                 sample_fitness_evaluator,
-                                 gene_factory)
+        gene_pool = GenePool.new(template: sample_template,
+                                 fitness_evaluator: sample_fitness_evaluator,
+                                 gene_factory: gene_factory)
 
         assert_equal 100, gene_pool.best_fitness
+      end
+    end
+
+    describe '#worst_fitness' do
+      it 'returns the fitness of the worst gene' do
+        a = Gene.new([{ a: 1, b: 1 }], sample_fitness_evaluator)
+        b = c = Gene.new([{ a: 10, b: 10 }], sample_fitness_evaluator)
+
+        gene_factory = MiniTest::Mock.new
+        gene_factory.expect :create, [a, b, c], [10]
+
+        gene_pool = GenePool.new(template: sample_template,
+                                 fitness_evaluator: sample_fitness_evaluator,
+                                 gene_factory: gene_factory)
+
+        assert_equal 1, gene_pool.worst_fitness
       end
     end
 
@@ -95,9 +176,9 @@ module GeneGenie
         gene_factory = MiniTest::Mock.new
         gene_factory.expect :create, [a, b, c], [10]
 
-        gene_pool = GenePool.new(sample_template,
-                                 sample_fitness_evaluator,
-                                 gene_factory)
+        gene_pool = GenePool.new(template: sample_template,
+                                 fitness_evaluator: sample_fitness_evaluator,
+                                 gene_factory: gene_factory)
 
         assert_equal 34, gene_pool.average_fitness
       end
