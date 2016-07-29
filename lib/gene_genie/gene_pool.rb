@@ -104,10 +104,8 @@ module GeneGenie
       end
     end
 
-    # a very simple selection - pick by sorted order
-    # pick two different genes
     def select_genes
-      @selector.call(@pool)
+      @selector.call(self)
     end
 
     def combine_genes(first, second)

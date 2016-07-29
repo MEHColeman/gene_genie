@@ -9,7 +9,7 @@ module GeneGenie
     def call(pool)
       # a very simple selection - pick by sorted order
       # pick two different genes
-      selectees = pool.sort.reverse
+      selectees = pool.genes.sort.reverse
       first, second = nil, nil
       probability = [((1.0 / pool.size) * 3), 0.8].min
       while !first || !second do
