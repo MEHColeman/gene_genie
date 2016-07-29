@@ -97,6 +97,23 @@ module GeneGenie
       end
     end
 
+    describe '#total_fitness' do
+      it 'returns the sum of all fitnesses in the pool' do
+        a = Gene.new([{ a: 1, b: 1 }], sample_fitness_evaluator)
+        b = c = Gene.new([{ a: 10, b: 10 }], sample_fitness_evaluator)
+
+        gene_factory = MiniTest::Mock.new
+        gene_factory.expect :create, [a, b, c], [10]
+
+        gene_pool = GenePool.new(template: sample_template,
+                                 fitness_evaluator: sample_fitness_evaluator,
+                                 gene_factory: gene_factory)
+
+        assert_equal 201, gene_pool.total_fitness
+
+      end
+    end
+
     describe '#genes' do
       it 'returns the araray of genes' do
         assert_kind_of Array, subject.genes
