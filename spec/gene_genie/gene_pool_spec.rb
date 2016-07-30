@@ -136,6 +136,16 @@ module GeneGenie
       end
     end
 
+    describe '#generation' do
+      it 'returns the current generation of the gene pool' do
+        assert_equal 0, subject.generation
+
+        subject.evolve
+
+        assert_equal 1, subject.generation
+      end
+    end
+
     describe '#best_fitness' do
       it 'returns the fitness of the best gene' do
         a = b = Gene.new([{ a: 1, b: 1 }], sample_fitness_evaluator)

@@ -1,7 +1,7 @@
 require_relative 'gene_factory'
 require_relative 'mutator/simple_gene_mutator'
 require_relative 'mutator/null_mutator'
-require_relative 'selector/coin_flip_selector'
+require_relative 'selector/proportional_selector'
 require_relative 'template_evaluator'
 
 module GeneGenie
@@ -11,7 +11,7 @@ module GeneGenie
                    gene_factory:,
                    size: 10,
                    mutator: NullMutator.new,
-                   selector: CoinFlipSelector.new)
+                   selector: ProportionalSelector.new)
       unless (template.instance_of? Array) && (template[0].instance_of? Hash) then
         fail ArgumentError, 'template must be an array of hashes of ranges'
       end
@@ -24,6 +24,7 @@ module GeneGenie
       @mutator = mutator
       @selector = selector
       @pool = gene_factory.create(size)
+      @generation = 0
     end
 
     # build a GenePool with a reasonable set of defaults.
@@ -69,9 +70,14 @@ module GeneGenie
         new_pool << new_gene.mutate(@mutator)
       end
       @pool = new_pool
+      @generation += 1
 
       check_best_ever
       best.fitness > old_best_fitness
+    end
+
+    def generation
+      @generation
     end
 
     def average_fitness
