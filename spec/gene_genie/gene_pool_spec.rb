@@ -61,7 +61,14 @@ module GeneGenie
                      size: 10,
                      mutator: gene_mutator,
                      selector: gene_selector)
+      end
+    end
 
+    describe '#register_listener' do
+      it 'adds the listener to the list that gets notified' do
+        assert_equal 0, subject.instance_variable_get(:@listeners).size
+        subject.register_listener(Object.new)
+        assert_equal 1, subject.instance_variable_get(:@listeners).size
       end
     end
 
@@ -133,6 +140,16 @@ module GeneGenie
 
       it 'combines genes based on their score to create a new set of genes' do
         # pending
+      end
+
+      it 'notifies all the registered listeners' do
+        listener = MiniTest::Mock.new
+        listener.expect :call, nil, [subject]
+
+        subject.register_listener(listener)
+        subject.evolve
+
+        listener.verify
       end
     end
 
