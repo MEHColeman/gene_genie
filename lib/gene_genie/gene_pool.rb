@@ -108,9 +108,7 @@ module GeneGenie
     private
 
     def check_best_ever
-      if best.fitness > best_ever.fitness
-        @best_ever = best
-      end
+      @best_ever = best if best.fitness > best_ever.fitness
     end
 
     def select_genes
@@ -126,9 +124,9 @@ module GeneGenie
     end
 
     def select_genes_combine_and_mutate
-        first_gene, second_gene = select_genes
-        new_gene = combine_genes(first_gene, second_gene)
-        new_gene.mutate(@mutator)
+      first_gene, second_gene = select_genes
+      new_gene = combine_genes(first_gene, second_gene)
+      new_gene.mutate(@mutator)
     end
   end
 end
