@@ -12,7 +12,7 @@ module GeneGenie
                    size: 10,
                    mutator: NullMutator.new,
                    selector: ProportionalSelector.new)
-      unless (template.instance_of? Array) && (template[0].instance_of? Hash) then
+      unless (template.instance_of? Array) && (template[0].instance_of? Hash)
         fail ArgumentError, 'template must be an array of hashes of ranges'
       end
       unless fitness_evaluator.respond_to?(:fitness)
@@ -25,6 +25,7 @@ module GeneGenie
       @selector = selector
       @pool = gene_factory.create(size)
       @generation = 0
+      @listeners = []
     end
 
     # build a GenePool with a reasonable set of defaults.
@@ -43,6 +44,10 @@ module GeneGenie
                    gene_factory: gene_factory,
                    size: size,
                    mutator: gene_mutator)
+    end
+
+    def register_listener(listener)
+      @listeners << listener
     end
 
     def size
@@ -65,14 +70,14 @@ module GeneGenie
       old_best_fitness = best.fitness
       new_pool = []
       size.times do
-        first_gene, second_gene = select_genes
-        new_gene = combine_genes(first_gene, second_gene)
-        new_pool << new_gene.mutate(@mutator)
+        new_pool << select_genes_combine_and_mutate
       end
       @pool = new_pool
+      check_best_ever
       @generation += 1
 
-      check_best_ever
+      @listeners.each { |l| l.call(self) }
+
       best.fitness > old_best_fitness
     end
 
@@ -103,9 +108,7 @@ module GeneGenie
     private
 
     def check_best_ever
-      if best.fitness > best_ever.fitness
-        @best_ever = best
-      end
+      @best_ever = best if best.fitness > best_ever.fitness
     end
 
     def select_genes
@@ -118,6 +121,12 @@ module GeneGenie
 
     def fitness_values
       @pool.map(&:fitness)
+    end
+
+    def select_genes_combine_and_mutate
+      first_gene, second_gene = select_genes
+      new_gene = combine_genes(first_gene, second_gene)
+      new_gene.mutate(@mutator)
     end
   end
 end
