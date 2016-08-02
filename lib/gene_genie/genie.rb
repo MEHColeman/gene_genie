@@ -1,4 +1,5 @@
 require_relative 'gene_pool'
+require_relative 'listener/logging_listener'
 
 # Namespace for GeneGenie genetic algorithm optimisation gem
 # @since 0.0.1
@@ -34,6 +35,10 @@ module GeneGenie
       @best_fitness > previous_best
     end
     alias_method :optimize, :optimise
+
+    def register_listener(listener)
+      @gene_pool.register_listener(listener)
+    end
 
     def best
       @gene_pool.best_ever.to_hashes

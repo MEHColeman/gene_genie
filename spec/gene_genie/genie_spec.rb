@@ -50,6 +50,11 @@ module GeneGenie
       end
     end
 
+    describe '#register_listener' do
+      it 'adds the listener to the gene pool' do
+      end
+    end
+
     describe '#best' do
       it 'returns an Array of Hashes, conforming to the supplied template' do
         optimised = genie.best
