@@ -55,11 +55,19 @@ module GeneGenie
     end
 
     def best
-      @pool.max_by(&:fitness)
+      @best ||= @pool.max_by(&:fitness)
     end
 
     def best_fitness
       best.fitness
+    end
+
+    def worst
+      @worst ||= @pool.min_by(&:fitness)
+    end
+
+    def worst_fitness
+      worst.fitness
     end
 
     def best_ever
@@ -73,7 +81,7 @@ module GeneGenie
         new_pool << select_genes_combine_and_mutate
       end
       @pool = new_pool
-      check_best_ever
+      update_stats
       @generation += 1
 
       @listeners.each { |l| l.call(self) }
@@ -86,28 +94,30 @@ module GeneGenie
     end
 
     def average_fitness
-      total_fitness / @pool.size
+      @average_fitness ||= total_fitness / @pool.size
     end
 
     def total_fitness
-      fitness_values.reduce(:+)
+      @total_fitness ||= fitness_values.reduce(:+)
+    end
+
+    def total_normalised_fitness
+      @total_normalised_fitness ||= normalised_fitness_values.reduce(:+)
     end
 
     def genes
       @pool
     end
 
-    def worst
-      @pool.min_by(&:fitness)
-    end
-
-    def worst_fitness
-      worst.fitness
-    end
-
     private
 
-    def check_best_ever
+    def update_stats
+      @best = nil
+      @worst = nil
+      @total_fitness = nil
+      @total_normalised_fitness = nil
+      @average_fitness = nil
+
       @best_ever = best if best.fitness > best_ever.fitness
     end
 
@@ -121,6 +131,10 @@ module GeneGenie
 
     def fitness_values
       @pool.map(&:fitness)
+    end
+
+    def normalised_fitness_values
+      @pool.map{ |gene| gene.normalised_fitness(worst_fitness) }
     end
 
     def select_genes_combine_and_mutate
