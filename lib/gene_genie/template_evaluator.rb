@@ -19,8 +19,8 @@ module GeneGenie
     # maximum of 1000
     def recommended_size
       [
-        [(permutations / 100_000), 5000].min,
-        [10, permutations].min,
+        [((Math.log(permutations))**2).ceil, 3000].min,
+        [6, permutations].min,
       ].max
     end
   end

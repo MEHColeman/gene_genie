@@ -8,6 +8,9 @@ module GeneGenie
     let(:tiny_check_template) { [{ a: 1..3 }] }
     let(:tiny_check_evaluator) { TemplateEvaluator.new(tiny_check_template) }
 
+    let(:small_check_template) { [{ a: 1..10 }] }
+    let(:small_check_evaluator) { TemplateEvaluator.new(small_check_template) }
+
     let(:normal_check_template) {
       [{
         a: 1..30,
@@ -25,13 +28,13 @@ module GeneGenie
 
     let(:huge_check_template) {
       [{
-        a: 1..3,
-        b: 1..10,
-        c: 3..5
+        a: 1..30000,
+        b: 1..10000,
+        c: 3..50000
       },
       {
-        d: 1..200,
-        e: 1..500,
+        d: 1..200000,
+        e: 1..500000,
         f: 300..80000,
         g: 300..80000,
       }]
@@ -50,7 +53,8 @@ module GeneGenie
         assert_equal 9900, subject.permutations
         assert_equal 3, tiny_check_evaluator.permutations
         assert_equal 10_890_000, normal_check_evaluator.permutations
-        assert_equal 57_170_244_609_000_000, huge_check_evaluator.permutations
+        assert_equal 9_527_992_966_535_940_000_000_000_000_000_000,
+          huge_check_evaluator.permutations
       end
     end
 
@@ -59,16 +63,16 @@ module GeneGenie
         assert_equal 3, tiny_check_evaluator.recommended_size
       end
 
-      it 'normally returns permutations/100_000' do
-        assert_equal  108, normal_check_evaluator.recommended_size
+      it 'normally returns log(permutations)^2' do
+        assert_equal  263, normal_check_evaluator.recommended_size
       end
 
-      it 'return a minimum of 10 when permutations >10 and <100,000' do
-        assert_equal 10, subject.recommended_size
+      it 'return a minimum of 6 when permutations are very low' do
+        assert_equal 6, small_check_evaluator.recommended_size
       end
 
-      it 'returns a maximum of 5000' do
-        assert_equal 5000, huge_check_evaluator.recommended_size
+      it 'returns a maximum of 3000' do
+        assert_equal 3000, huge_check_evaluator.recommended_size
       end
     end
   end
