@@ -125,10 +125,6 @@ module GeneGenie
       @selector.call(self)
     end
 
-    def combine_genes(first, second)
-      first.combine(second)
-    end
-
     def fitness_values
       @pool.map(&:fitness)
     end
@@ -139,7 +135,7 @@ module GeneGenie
 
     def select_genes_combine_and_mutate
       first_gene, second_gene = select_genes
-      new_gene = combine_genes(first_gene, second_gene)
+      new_gene = first_gene.combine(second_gene)
       new_gene.mutate(@mutator)
     end
   end
