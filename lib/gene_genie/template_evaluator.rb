@@ -24,5 +24,20 @@ module GeneGenie
         3
       ].max
     end
+
+    def hash_valid?(hash_under_test)
+      begin
+        @template.each_with_index do |h, index|
+          h.each do |k, v|
+            return false unless hash_under_test[index][k]
+            return false unless hash_under_test[index][k] >= v.min
+            return false unless hash_under_test[index][k] <= v.max
+          end
+        end
+      rescue
+        return false
+      end
+      return true
+    end
   end
 end
