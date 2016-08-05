@@ -45,6 +45,16 @@ module GeneGenie
       it 'returns a valid hash' do
         assert TemplateEvaluator.new(template).hash_valid?(valid_hash)
       end
+
+      it 'returns a hash where all values are within 5% iof the template range of the original' do
+        original_hash = Marshal.load(Marshal.dump(valid_hash))
+        new_hash = subject.call(valid_hash)
+        original_hash.each_with_index do |hash, index|
+          hash.each do |k, v|
+            assert (v - new_hash[index][k]).abs <= 50
+          end
+        end
+      end
     end
   end
 end

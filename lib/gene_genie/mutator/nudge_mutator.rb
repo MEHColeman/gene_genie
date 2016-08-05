@@ -7,16 +7,17 @@ module GeneGenie
   class NudgeMutator
     def initialize(template, mutation_rate = 0.01)
       @template = template
-      @mutation_rate = mutation_rate * 3
+      @mutation_rate = mutation_rate * 1
     end
 
     def call(genes)
       genes.each_with_index do |hash, index|
         hash.each do |k, v|
           if rand < @mutation_rate
+            nudge_max = (@template[index][k].size * 0.05).ceil
             hash[k] = rand(
-              [@template[index][k].min, (v * 0.95).floor ].max..
-              [@template[index][k].max, (v * 1.05).ceil].min
+              [@template[index][k].min, (v - nudge_max).floor].max..
+              [@template[index][k].max, (v + nudge_max).ceil].min
             )
           end
         end
