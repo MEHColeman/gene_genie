@@ -1,5 +1,6 @@
 require 'minitest_helper'
 require 'gene_genie/mutator/simple_gene_mutator'
+require 'gene_genie/template_evaluator'
 
 module GeneGenie
   describe SimpleGeneMutator do
@@ -42,7 +43,7 @@ module GeneGenie
       end
 
       it 'returns a valid hash' do
-        # pending
+        assert TemplateEvaluator.new(template).hash_valid?(valid_hash)
       end
     end
   end
