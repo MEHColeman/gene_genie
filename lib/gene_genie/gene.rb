@@ -20,9 +20,14 @@ module GeneGenie
       @fitness ||= @fitness_evaluator.fitness(@information)
     end
 
+    def normalised_fitness(minimum)
+      @normalised_fitness ||= fitness - minimum
+    end
+
     def mutate(mutator)
       @information = mutator.call @information
       @fitness = nil
+      @normalised_fitness = nil
       self
     end
 

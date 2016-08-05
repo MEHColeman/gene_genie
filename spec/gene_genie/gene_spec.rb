@@ -56,6 +56,12 @@ module GeneGenie
       end
     end
 
+    describe '#normalised_fitness' do
+      it 'returns a normalised fitness, based on the minimum pool fitness' do
+        assert_equal 0, subject.normalised_fitness(1)
+      end
+    end
+
     it "can compare it's fitness with other genes" do
       better_gene = Gene.new(information, higher_fitness_evaluator)
       assert_equal -1, subject <=> better_gene

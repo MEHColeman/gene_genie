@@ -9,21 +9,12 @@ module GeneGenie
     private
 
     def pick_one(pool)
-      proportional_index = rand(total_normalised_fitness(pool))
+      proportional_index = rand(pool.total_normalised_fitness)
       total = 0
       pool.genes.each_with_index do |gene, index|
-        total += normalised_fitness(gene,pool)
+        total += gene.normalised_fitness(pool.worst_fitness)
         return gene if total >= proportional_index || index == (pool.size - 1)
       end
-    end
-
-    def total_normalised_fitness(pool)
-      pool.genes.map { |gene| normalised_fitness(gene,pool) }.reduce(:+)
-    end
-
-    def normalised_fitness(gene,pool)
-      gene.fitness -
-        pool.worst_fitness + 1
     end
   end
 end
