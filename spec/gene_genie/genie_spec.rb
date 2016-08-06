@@ -1,5 +1,6 @@
 require 'minitest_helper'
 require 'gene_genie'
+require 'gene_genie/template_evaluator'
 
 # The basic Genie class. For the simplest optimisation, with best-guess
 # optimisations, this is all you need.
@@ -60,8 +61,10 @@ module GeneGenie
         optimised = genie.best
         assert_kind_of Array, optimised
         assert_kind_of Hash, optimised[0]
+        assert TemplateEvaluator.new(sample_template).hash_valid?(optimised)
         sample_template.each_with_index do |h, index|
           h.each do |k, v|
+
             refute_nil optimised[index][k]
             assert_equal true, optimised[index][k] >= v.min
             assert_equal true, optimised[index][k] <= v.max

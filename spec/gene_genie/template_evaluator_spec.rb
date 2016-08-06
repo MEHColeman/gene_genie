@@ -81,5 +81,16 @@ module GeneGenie
         assert_equal 3000, huge_check_evaluator.recommended_size
       end
     end
+
+    describe '.hash_valid?' do
+      it 'returns true when the specified hash is valid for the template' do
+        assert true, subject.hash_valid?([{a:50, b:50}])
+      end
+
+      it 'returns false when the specified hash is invalid for the template' do
+        refute subject.hash_valid?([{a:3}])
+        refute subject.hash_valid?([{b:3, c:50}])
+      end
+    end
   end
 end

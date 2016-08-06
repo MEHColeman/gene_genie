@@ -1,9 +1,9 @@
 require 'minitest_helper'
-require 'gene_genie/mutator/simple_gene_mutator'
+require 'gene_genie/mutator/nudge_mutator'
 require 'gene_genie/template_evaluator'
 
 module GeneGenie
-  describe SimpleGeneMutator do
+  describe NudgeMutator do
     let(:template) { [{
       a: 1..1000,
       b: 1..1000,
@@ -26,12 +26,12 @@ module GeneGenie
       g: 700,
     }] }
 
-    subject { SimpleGeneMutator.new(template, mutation_rate) }
+    subject { NudgeMutator.new(template, mutation_rate) }
 
     describe '#initialize' do
       it 'is initialised with a gene template and a mutation rate' do
-        gm = SimpleGeneMutator.new(template, mutation_rate)
-        assert_kind_of SimpleGeneMutator, gm
+        gm = NudgeMutator.new(template, mutation_rate)
+        assert_kind_of NudgeMutator, gm
       end
     end
 
@@ -44,6 +44,16 @@ module GeneGenie
 
       it 'returns a valid hash' do
         assert TemplateEvaluator.new(template).hash_valid?(valid_hash)
+      end
+
+      it 'returns a hash where all values are within 5% iof the template range of the original' do
+        original_hash = Marshal.load(Marshal.dump(valid_hash))
+        new_hash = subject.call(valid_hash)
+        original_hash.each_with_index do |hash, index|
+          hash.each do |k, v|
+            assert (v - new_hash[index][k]).abs <= 50
+          end
+        end
       end
     end
   end
