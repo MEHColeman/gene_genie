@@ -21,6 +21,7 @@ module GeneGenie
       [
         [((Math.log(permutations))**2).ceil, 3000].min,
         [6, permutations].min,
+        3
       ].max
     end
   end

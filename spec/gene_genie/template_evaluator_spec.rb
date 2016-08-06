@@ -5,6 +5,8 @@ module GeneGenie
   describe TemplateEvaluator do
     subject { TemplateEvaluator.new(sample_template) }
 
+    let(:very_tiny_check_template) { [{ a: 1..1 }] }
+    let(:very_tiny_check_evaluator) { TemplateEvaluator.new(very_tiny_check_template) }
     let(:tiny_check_template) { [{ a: 1..3 }] }
     let(:tiny_check_evaluator) { TemplateEvaluator.new(tiny_check_template) }
 
@@ -59,6 +61,10 @@ module GeneGenie
     end
 
     describe '#recommended_size' do
+      it 'returns a minimum of 2' do
+        assert_equal 2, very_tiny_check_evaluator.recommended_size
+      end
+
       it 'returns the number of permutations, if that value < 10' do
         assert_equal 3, tiny_check_evaluator.recommended_size
       end
