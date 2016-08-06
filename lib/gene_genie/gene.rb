@@ -36,7 +36,11 @@ module GeneGenie
       new_information = @information.map.with_index do |part, index|
         new_hash = {}
         part.each do |k, v|
-          new_hash[k] = (rand > 0.5) ? v : other_gene_hash[index][k]
+          # new_hash[k] = (rand > 0.5) ? v : other_gene_hash[index][k]
+          p_first = rand(0.0..100.0)
+          p_second = 100 - p_first
+          new_hash[k] = (((p_first * v) +
+                          (p_second * other_gene_hash[index][k]))/100).round
         end
         new_hash
       end
