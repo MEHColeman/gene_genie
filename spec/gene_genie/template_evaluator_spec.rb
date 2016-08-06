@@ -61,8 +61,8 @@ module GeneGenie
     end
 
     describe '#recommended_size' do
-      it 'returns a minimum of 2' do
-        assert_equal 2, very_tiny_check_evaluator.recommended_size
+      it 'returns a minimum of 3' do
+        assert_equal 3, very_tiny_check_evaluator.recommended_size
       end
 
       it 'returns the number of permutations, if that value < 10' do
