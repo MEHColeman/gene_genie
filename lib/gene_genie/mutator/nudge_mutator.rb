@@ -5,7 +5,7 @@ module GeneGenie
   # current value of 50 might change in the range 45..55 instead of 1..100.
   # @since 0.2.0
   class NudgeMutator
-    def initialize(template, mutation_rate = 0.01)
+    def initialize(template, mutation_rate = 0.04)
       @template = template
       @mutation_rate = mutation_rate * 1
     end

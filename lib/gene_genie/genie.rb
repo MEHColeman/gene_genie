@@ -61,8 +61,8 @@ module GeneGenie
       DEFAULT_NO_OF_GENERATIONS.times do
         current_fitness = best_fitness
         @gene_pool.evolve
-        break if best_fitness < current_fitness *
-          (1 + (IMPROVEMENT_THRESHOLD / 100))
+        break if (best_fitness < current_fitness *
+          (1 + (IMPROVEMENT_THRESHOLD / 100)) && best_fitness > 0)
       end
     end
   end
