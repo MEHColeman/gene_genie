@@ -1,5 +1,5 @@
 require_relative 'gene_factory'
-require_relative 'mutator/simple_gene_mutator'
+require_relative 'mutator/nudge_mutator'
 require_relative 'mutator/null_mutator'
 require_relative 'selector/proportional_selector'
 require_relative 'template_evaluator'
@@ -34,7 +34,7 @@ module GeneGenie
       unless (template.instance_of? Array) && (template[0].instance_of? Hash)
         fail ArgumentError, 'template must be an array of hashes of ranges'
       end
-      gene_mutator = SimpleGeneMutator.new(template)
+      gene_mutator = NudgeMutator.new(template)
       gene_factory = GeneFactory.new(template, fitness_evaluator)
 
       template_evaluator = TemplateEvaluator.new(template)
