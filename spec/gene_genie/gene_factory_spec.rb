@@ -1,5 +1,6 @@
 require 'minitest_helper'
 require 'gene_genie/gene_factory'
+require 'gene_genie/combiner/uniform_combiner'
 
 module GeneGenie
 
@@ -8,6 +9,13 @@ module GeneGenie
 
     describe 'initialize' do
       it 'takes template and fitness_evaluator arguments' do
+        assert_kind_of GeneFactory, subject
+      end
+
+      it 'takes template and fitness_evaluator arguments' do
+    subject = GeneFactory.new(sample_template,
+                              sample_fitness_evaluator,
+                              GeneGenie::Combiner::UniformCombiner.new)
         assert_kind_of GeneFactory, subject
       end
     end
