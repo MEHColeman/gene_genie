@@ -23,13 +23,23 @@ module GeneGenie
       fitness_evaluator.expect :fitness, 0, [information]
     end
     let(:second_information) { [{ a: 11, b: 21 }, { c: 31, d: 41 }] }
-    let(:second_gene) { Gene.new(second_information, fitness_evaluator) }
+    let(:second_gene) { Gene.new(information: second_information,
+                                 fitness_evaluator: fitness_evaluator) }
 
-    subject { Gene.new(information, fitness_evaluator) }
+    subject { Gene.new(information: information,
+                       fitness_evaluator: fitness_evaluator) }
 
     describe '#initialize' do
       it 'is initialised with an array of hashes and a fitness evaluator' do
-        gene = Gene.new(information, fitness_evaluator)
+        gene = Gene.new(information: information,
+                        fitness_evaluator: fitness_evaluator)
+        assert_kind_of Gene, gene
+      end
+
+      it 'takes an optional gene_combiner' do
+        gene = Gene.new(information: information,
+                        fitness_evaluator: fitness_evaluator,
+                        gene_combiner: Object.new)
         assert_kind_of Gene, gene
       end
 
@@ -49,6 +59,15 @@ module GeneGenie
       end
     end
 
+    describe '#fitness_evaluator' do
+      it 'returns the fitness evaluator' do
+        fitness_evaluator = Object.new
+        subject = Gene.new(information: information,
+                           fitness_evaluator: fitness_evaluator)
+        assert_equal fitness_evaluator, subject.fitness_evaluator
+      end
+    end
+
     describe '#fitness' do
       it 'uses the fitness_evaluator to get the fitness' do
         assert_equal 1, subject.fitness
@@ -63,10 +82,12 @@ module GeneGenie
     end
 
     it "can compare it's fitness with other genes" do
-      better_gene = Gene.new(information, higher_fitness_evaluator)
+      better_gene = Gene.new(information: information,
+                             fitness_evaluator: higher_fitness_evaluator)
       assert_equal -1, subject <=> better_gene
 
-      worse_gene = Gene.new(information, lower_fitness_evaluator)
+      worse_gene = Gene.new(information: information,
+                            fitness_evaluator: lower_fitness_evaluator)
       assert_equal 1, subject <=> worse_gene
     end
 
@@ -84,13 +105,15 @@ module GeneGenie
     end
 
     describe '#combine' do
-      it 'combines information from the specified gene to create a new gene' do
-        new_gene_hash = subject.combine(second_gene).to_hashes
+      it 'calls the configured gene combiner' do
+        gene_combiner = MiniTest::Mock.new
+        subject = Gene.new(information: information,
+                           fitness_evaluator: fitness_evaluator,
+                           gene_combiner: gene_combiner )
 
-        assert new_gene_hash[0][:a] == 10 || new_gene_hash[0][:a] == 11
-        assert new_gene_hash[0][:b] == 20 || new_gene_hash[0][:b] == 21
-        assert new_gene_hash[1][:c] == 30 || new_gene_hash[1][:c] == 31
-        assert new_gene_hash[1][:d] == 40 || new_gene_hash[1][:d] == 41
+        gene_combiner.expect :call, Object.new, [subject, second_gene]
+        subject.combine(second_gene)
+        gene_combiner.verify
       end
 
       it 'returns a Gene' do

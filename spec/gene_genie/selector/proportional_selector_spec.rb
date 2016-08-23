@@ -6,9 +6,12 @@ require 'gene_genie/gene_pool'
 
 module GeneGenie
   describe ProportionalSelector do
-    let(:gene_one)   { Gene.new([{a: 1, b:1}], sample_fitness_evaluator) }
-    let(:gene_two)   { Gene.new([{a: 3, b:11}], sample_fitness_evaluator) }
-    let(:gene_three) { Gene.new([{a: 6, b:11}], sample_fitness_evaluator) }
+    let(:gene_one)   { Gene.new(information:[{a: 1, b:1}],
+                                fitness_evaluator: sample_fitness_evaluator) }
+    let(:gene_two)   { Gene.new(information:[{a: 3, b:11}],
+                                fitness_evaluator: sample_fitness_evaluator) }
+    let(:gene_three) { Gene.new(information:[{a: 6, b:11}],
+                                fitness_evaluator: sample_fitness_evaluator) }
     let(:pool) { GenePool.new( template: [{}],
                               fitness_evaluator: sample_fitness_evaluator,
                               gene_factory: CustomGeneFactory.new([ gene_one, gene_two, gene_three]),

@@ -6,9 +6,12 @@ require 'gene_genie/gene_pool'
 
 module GeneGenie
   describe CoinFlipSelector do
-    let(:gene_one)   { Gene.new([{a: 2, b:4}], sample_fitness_evaluator) }
-    let(:gene_two)   { Gene.new([{a: 6, b:5}], sample_fitness_evaluator) }
-    let(:gene_three) { Gene.new([{a: 8, b:6}], sample_fitness_evaluator) }
+    let(:gene_one)   { Gene.new(information: [{a: 2, b:4}],
+                                fitness_evaluator: sample_fitness_evaluator) }
+    let(:gene_two)   { Gene.new(information: [{a: 6, b:5}],
+                                fitness_evaluator: sample_fitness_evaluator) }
+    let(:gene_three) { Gene.new(information: [{a: 8, b:6}],
+                                fitness_evaluator: sample_fitness_evaluator) }
     let(:pool) { GenePool.new( template: [{}],
                               fitness_evaluator: sample_fitness_evaluator,
                               gene_factory: CustomGeneFactory.new([ gene_one, gene_two, gene_three]),

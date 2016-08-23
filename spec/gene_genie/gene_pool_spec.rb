@@ -74,8 +74,10 @@ module GeneGenie
 
     describe '#best' do
       it 'returns the gene with the highest fitness' do
-        a = b = Gene.new([{ a: 1, b: 1 }], sample_fitness_evaluator)
-        c = Gene.new([{ a: 10, b: 10 }], sample_fitness_evaluator)
+        a = b = Gene.new(information: [{ a: 1, b: 1 }],
+                         fitness_evaluator: sample_fitness_evaluator)
+        c = Gene.new(information: [{ a: 10, b: 10 }],
+                     fitness_evaluator: sample_fitness_evaluator)
 
         gene_factory = MiniTest::Mock.new
         gene_factory.expect :create, [a, b, c], [10]
@@ -90,8 +92,10 @@ module GeneGenie
 
     describe '#worst' do
       it 'returns the gene with the lowest fitness' do
-        a = Gene.new([{ a: 1, b: 1 }], sample_fitness_evaluator)
-        b = c = Gene.new([{ a: 10, b: 10 }], sample_fitness_evaluator)
+        a = Gene.new(information: [{ a: 1, b: 1 }],
+                     fitness_evaluator: sample_fitness_evaluator)
+        b = c = Gene.new(information: [{ a: 10, b: 10 }],
+                         fitness_evaluator: sample_fitness_evaluator)
 
         gene_factory = MiniTest::Mock.new
         gene_factory.expect :create, [a, b, c], [10]
@@ -106,8 +110,10 @@ module GeneGenie
 
     describe '#total_fitness' do
       it 'returns the sum of all fitnesses in the pool' do
-        a = Gene.new([{ a: 1, b: 1 }], sample_fitness_evaluator)
-        b = c = Gene.new([{ a: 10, b: 10 }], sample_fitness_evaluator)
+        a = Gene.new(information: [{ a: 1, b: 1 }],
+                     fitness_evaluator: sample_fitness_evaluator)
+        b = c = Gene.new(information: [{ a: 10, b: 10 }],
+                         fitness_evaluator: sample_fitness_evaluator)
 
         gene_factory = MiniTest::Mock.new
         gene_factory.expect :create, [a, b, c], [10]
@@ -122,8 +128,10 @@ module GeneGenie
 
     describe '#total_normalised_fitness' do
       it 'returns the sum of all fitnesses in the pool' do
-        a = Gene.new([{ a: 1, b: 10 }], sample_fitness_evaluator)
-        b = c = Gene.new([{ a: 10, b: 10 }], sample_fitness_evaluator)
+        a = Gene.new(information: [{ a: 1, b: 10 }],
+                     fitness_evaluator: sample_fitness_evaluator)
+        b = c = Gene.new(information: [{ a: 10, b: 10 }],
+                         fitness_evaluator: sample_fitness_evaluator)
 
         gene_factory = MiniTest::Mock.new
         gene_factory.expect :create, [a, b, c], [10]
@@ -181,8 +189,10 @@ module GeneGenie
 
     describe '#best_fitness' do
       it 'returns the fitness of the best gene' do
-        a = b = Gene.new([{ a: 1, b: 1 }], sample_fitness_evaluator)
-        c = Gene.new([{ a: 10, b: 10 }], sample_fitness_evaluator)
+        a = b = Gene.new(information: [{ a: 1, b: 1 }],
+                         fitness_evaluator: sample_fitness_evaluator)
+        c = Gene.new(information: [{ a: 10, b: 10 }],
+                     fitness_evaluator: sample_fitness_evaluator)
 
         gene_factory = MiniTest::Mock.new
         gene_factory.expect :create, [a, b, c], [10]
@@ -197,8 +207,10 @@ module GeneGenie
 
     describe '#worst_fitness' do
       it 'returns the fitness of the worst gene' do
-        a = Gene.new([{ a: 1, b: 1 }], sample_fitness_evaluator)
-        b = c = Gene.new([{ a: 10, b: 10 }], sample_fitness_evaluator)
+        a = Gene.new(information: [{ a: 1, b: 1 }],
+                     fitness_evaluator: sample_fitness_evaluator)
+        b = c = Gene.new(information: [{ a: 10, b: 10 }],
+                         fitness_evaluator: sample_fitness_evaluator)
 
         gene_factory = MiniTest::Mock.new
         gene_factory.expect :create, [a, b, c], [10]
@@ -213,8 +225,10 @@ module GeneGenie
 
     describe '#average_fitness' do
       it 'returns the average fitness of all genes' do
-        a = b = Gene.new([{ a: 1, b: 1 }], sample_fitness_evaluator)
-        c = Gene.new([{ a: 10, b: 10 }], sample_fitness_evaluator)
+        a = b = Gene.new(information: [{ a: 1, b: 1 }],
+                         fitness_evaluator: sample_fitness_evaluator)
+        c = Gene.new(information: [{ a: 10, b: 10 }],
+                     fitness_evaluator: sample_fitness_evaluator)
 
         gene_factory = MiniTest::Mock.new
         gene_factory.expect :create, [a, b, c], [10]
