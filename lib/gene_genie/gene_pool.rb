@@ -34,7 +34,7 @@ module GeneGenie
       unless (template.instance_of? Array) && (template[0].instance_of? Hash)
         fail ArgumentError, 'template must be an array of hashes of ranges'
       end
-      gene_mutator = NudgeMutator.new(template)
+      gene_mutator = NudgeMutator.new(template, 0.01)
       gene_factory = GeneFactory.new(template, fitness_evaluator)
 
       template_evaluator = TemplateEvaluator.new(template)
