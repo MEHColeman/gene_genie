@@ -78,7 +78,7 @@ module GeneGenie
       end
 
       it 'returns a maximum of 3000' do
-        assert_equal 4000, huge_check_evaluator.recommended_size
+        assert_equal 5000, huge_check_evaluator.recommended_size
       end
     end
 
