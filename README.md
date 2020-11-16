@@ -44,7 +44,7 @@ set_of_items: [:apple, :banana, :orange],
 }
 ```
 
-If you use the simple genie interface, the genetic algorithm will come up with a reasonable best-guesses for various algorthm parameters, but you can dive under the covers to give yourself more flexibility.
+If you use the simple genie interface, the genetic algorithm will come up with a reasonable best-guesses for various algorithm parameters, but you can dive under the covers to give yourself more flexibility.
 * Population size
 * Gene pools
 * Initialization
