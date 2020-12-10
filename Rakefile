@@ -7,3 +7,12 @@ Rake::TestTask.new do |t|
   t.warning = true
   t.pattern = "spec/**/*_spec.rb"
 end
+
+
+begin
+  require 'rspec/core/rake_task'
+  RSpec::Core::RakeTask.new(:spec)
+  task :default => :spec
+rescue LoadError
+   # no rspec available
+end
