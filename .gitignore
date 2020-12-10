@@ -2,3 +2,5 @@ Gemfile.local
 Gemfile.lock
 
 *.log
+
+tags

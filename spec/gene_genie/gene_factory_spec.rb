@@ -1,32 +1,32 @@
-require 'minitest_helper'
 require 'gene_genie/gene_factory'
 require 'gene_genie/combiner/uniform_combiner'
 
-module GeneGenie
+require 'support/samples'
 
-  describe GeneFactory do
+module GeneGenie
+  RSpec.describe GeneFactory do
     subject { GeneFactory.new(sample_template, sample_fitness_evaluator) }
 
     describe 'initialize' do
       it 'takes template and fitness_evaluator arguments' do
-        assert_kind_of GeneFactory, subject
+        expect(subject).to be_kind_of GeneFactory
       end
 
       it 'takes template and fitness_evaluator arguments' do
-    subject = GeneFactory.new(sample_template,
-                              sample_fitness_evaluator,
-                              GeneGenie::Combiner::UniformCombiner.new)
-        assert_kind_of GeneFactory, subject
+        subject = GeneFactory.new(sample_template,
+                                  sample_fitness_evaluator,
+                                  GeneGenie::Combiner::UniformCombiner.new)
+        expect(subject).to be_kind_of GeneFactory
       end
     end
 
     describe '#create' do
       it 'returns an array of 1 gene if size not specified' do
-        assert_equal 1, subject.create.size
+        expect(subject.create.size).to eq 1
       end
 
       it 'returns an array of genes of the specified size' do
-        assert_equal 4, subject.create(4).size
+        expect(subject.create(4).size).to eq 4
       end
       it 'can take a template of an array of hashes' do
         template = [{ a: 1..100, b: 2..100 },
@@ -34,7 +34,8 @@ module GeneGenie
                     { e:0..1,    f: 1..9}]
         test_subject = GeneFactory.new(template, sample_fitness_evaluator)
         genes = test_subject.create(30)
-        assert_equal 100, test_subject.create(100).size
+
+        expect(test_subject.create(100).size).to eq 100
       end
     end
   end

@@ -1,9 +1,8 @@
-require 'minitest_helper'
 require 'gene_genie/mutator/simple_gene_mutator'
 require 'gene_genie/template_evaluator'
 
 module GeneGenie
-  describe SimpleGeneMutator do
+  RSpec.describe SimpleGeneMutator do
     let(:template) { [{
       a: 1..1000,
       b: 1..1000,
@@ -11,7 +10,7 @@ module GeneGenie
       d: 1..1000,
       e: 1..1000,
       f: 1..1000,
-      g: 1..1000,
+      g: 1..1000
     }] }
 
     let(:mutation_rate) { 0.5 }
@@ -31,19 +30,19 @@ module GeneGenie
     describe '#initialize' do
       it 'is initialised with a gene template and a mutation rate' do
         gm = SimpleGeneMutator.new(template, mutation_rate)
-        assert_kind_of SimpleGeneMutator, gm
+        expect(gm).to be_kind_of(SimpleGeneMutator)
       end
     end
 
     describe '#call' do
       it 'mutates the hash' do
         original_hash = Marshal.load(Marshal.dump(valid_hash))
-        assert_equal original_hash, valid_hash
-        refute_equal original_hash, subject.call(valid_hash)
+        expect(valid_hash).to eq original_hash
+        expect(subject.call(valid_hash)).not_to eq original_hash
       end
 
       it 'returns a valid hash' do
-        assert TemplateEvaluator.new(template).hash_valid?(valid_hash)
+        expect(TemplateEvaluator.new(template).hash_valid?(valid_hash)).to be_truthy
       end
     end
   end
