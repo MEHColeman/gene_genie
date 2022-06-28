@@ -31,15 +31,23 @@ module GeneGenie
 
     let(:huge_check_template) do
       [{
-        a: 1..30000,
-        b: 1..10000,
-        c: 3..50000
+        a: 1..300000,
+        b: 1..300000,
+        c: 3..900000
       },
       {
         d: 1..200000,
         e: 1..500000,
-        f: 300..80000,
-        g: 300..80000
+        f: 300..800000,
+        g: 300..900000,
+        h: 1..1000000
+      },
+      {
+        d: 1..200000,
+        e: 1..500000,
+        f: 300..800000,
+        g: 300..900000,
+        h: 1..1000000
       }]
     end
     let(:huge_check_evaluator) { TemplateEvaluator.new(huge_check_template) }
@@ -56,7 +64,7 @@ module GeneGenie
             expect(subject.permutations).to eq 9900
             expect(tiny_check_evaluator.permutations).to eq 3
             expect(normal_check_evaluator.permutations).to eq 10_890_000
-            expect(huge_check_evaluator.permutations).to eq 9_527_992_966_535_940_000_000_000_000_000_000
+            expect(huge_check_evaluator.permutations).to eq 419310500559333850295144120158200000000000000000000000000000000000000000000
           end
     end
 
@@ -77,8 +85,8 @@ module GeneGenie
         expect(small_check_evaluator.recommended_size).to eq 6
       end
 
-      it 'returns a maximum of 3000' do
-        expect(huge_check_evaluator.recommended_size).to eq 5000
+      it 'returns a maximum of 20000' do
+        expect(huge_check_evaluator.recommended_size).to eq 20000
       end
     end
 
