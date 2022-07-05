@@ -21,7 +21,8 @@ fitness_evaluator = Summer.new
 
 genie = GeneGenie::Genie.new(template, fitness_evaluator)
 genie.optimise
-# the best possible result is { a: 10, b: 100, c: 1, d: 5} = 116
+# the best possible result is { a: 100, b: 1000, c: 1, d: 50} = 1151
+
 puts genie.best.inspect
 
 # to see this code in action:
