@@ -41,9 +41,9 @@ fitness_evaluator = DumbStringyScorer.new(target)
 
 genie = GeneGenie::Genie.new(template, fitness_evaluator)
 
-genie.register_listener(Proc.new { |g| puts "#{Stringy.new(g.best.to_hashes).to_s} #{g.best.fitness}"})
+genie.register_listener(Proc.new { |g| puts "Target string: '#{target}', Best string: '#{Stringy.new(g.best.to_hashes).to_s}', Score: #{g.best.fitness}"})
 genie.optimise
 
 puts genie.best.inspect
-puts Stringy.new(genie.best.to_hashes)
-puts genie.best.fitness
+puts Stringy.new(genie.best)
+puts genie.best_fitness
