@@ -20,6 +20,11 @@ template = [{
 fitness_evaluator = Summer.new
 
 genie = GeneGenie::Genie.new(template, fitness_evaluator)
+
+genie.register_listener(Proc.new do |g|
+  puts "Best score: '#{g.best.to_hashes.to_s}', Score: #{g.best_fitness}"
+end)
+
 genie.optimise
 # the best possible result is { a: 100, b: 1000, c: 1, d: 50} = 1151
 
