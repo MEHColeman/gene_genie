@@ -1,6 +1,7 @@
 module GeneGenie
   # A Template Evaluator provides certain analysis and useful information
-  # about templates
+  # about templates.
+  # A template is always treated internally as an Array of Hashes.
   # @since 0.0.2
   class TemplateEvaluator
     def initialize(template)
@@ -13,10 +14,11 @@ module GeneGenie
       }.reduce(:*)
     end
 
-    # returns a minimum of 10 unless the total number of permutations
-    # is below that
-    # otherwise, returns 1/1000th of the number of permutations up to a
-    # maximum of 1000
+    # Suggests a recommended GenePool size.
+    # returns a minimum of 6 unless the total number of permutations
+    # is below that.
+    # Otherwise, returns 1/1000th of the number of permutations up to a
+    # maximum of 20000
     def recommended_size
       [
         [((Math.log(permutations))**2).ceil, 20000].min,
@@ -25,6 +27,8 @@ module GeneGenie
       ].max
     end
 
+    # Verifies that the given hash conforms to the constraints specified in the
+    # hash template
     def hash_valid?(hash_under_test)
       begin
         @template.each_with_index do |h, index|

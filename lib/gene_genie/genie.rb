@@ -7,6 +7,9 @@ module GeneGenie
   # Top level, basic interface for GA optimisation.
   # Genie will attempt to optimise based on best-guess defaults if none are
   # provided
+  # Genie is basically a wrapper around GenePool that lets you get going as
+  # quickly as possible by providing a reasonable set of defaults.
+  # For more control and customisation, go straight to using GenePoo
   # @since 0.0.1
   class Genie
     DEFAULT_NO_OF_GENERATIONS = 50
