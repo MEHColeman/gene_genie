@@ -87,8 +87,39 @@ the covers to give yourself more flexibility.
 * Initialization
 * Optimisation Criteria
 
-Custom objects for crossover, gene selection, etc.
 
+## Advanced Use
+
+If you want more control over your algorithm, you can skip the `Genie`, and use
+`GenePool` directly.
+
+This allows you to create objects that are used to control the methods used for
+mutation, crossover, gene selection, gene pool parameters like population size
+and convergence criteria.
+~~~ruby
+  gene_mutator = CustomMutator.new(gm_args)
+  gene_factory = CustomGeneFactory.new(gf_args)
+
+  template_evaluator = CustomTemplateEvaluator.new(template)
+  size = template_evaluator.recommended_size
+
+  GenePool.new(template: template,
+               fitness_evaluator: fitness_evaluator,
+               gene_factory: gene_factory,
+               size: size,
+               mutator: gene_mutator)
+~~~
+The `mutator` operates on a `Gene` to alter it slightly, mimicking natural gene
+mutations.
+
+The `gene_factory` creates a population of genes of a given size. Genes are
+typically generated randomly across the parameter space, but this allows you to
+have more control over how genes are distributed across this space.
+
+The `template_evaluator` is used to provide other configuration options to the
+GenePool, such as recommended size.
+
+---
 Note:
 Due to the non-deterministic nature of the algorithm, some of the tests don't
 pass every time at the moment! This is a known issue.
