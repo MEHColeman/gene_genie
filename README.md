@@ -1,4 +1,3 @@
-[![Build Status](https://travis-ci.org/MEHColeman/gene_genie.svg?branch=master)](https://travis-ci.org/MEHColeman/gene_genie)
 [![Gem Version](https://badge.fury.io/rb/gene_genie.svg)](http://badge.fury.io/rb/gene_genie)
 [![Code Climate](https://codeclimate.com/github/MEHColeman/gene_genie.png)](https://codeclimate.com/github/MEHColeman/gene_genie)
 
