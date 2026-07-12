@@ -1,1 +1,6 @@
-add a .build method to GeneGenie, the same as GenePool, to create a genie with a default convergence criteria model
+See docs/REVIEW.md for the current status review and the phased roadmap.
+
+Previous entry (subsumed by the roadmap's Phase 1 termination objects and
+Phase 2 Genie options pass-through):
+- add a .build method to GeneGenie, the same as GenePool, to create a genie
+  with a default convergence criteria model
