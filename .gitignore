@@ -4,3 +4,4 @@ Gemfile.lock
 *.log
 
 tags
+spec/examples.txt
