@@ -1,16 +1,22 @@
+# frozen_string_literal: true
+
 module GeneGenie
   module Combiner
-    # Picks alleles from each Gene randomly
+    # Uniform crossover: each child allele is picked from one of the two
+    # parents with equal probability.
     class UniformCombiner
+      # @param random [Random] source of randomness - pass a seeded instance
+      #   for reproducible combination
+      def initialize(random: Random.new)
+        @random = random
+      end
+
       def call(first_gene, second_gene)
-        first_gene_hashes = first_gene.to_hashes
         second_gene_hashes = second_gene.to_hashes
-        new_information = first_gene_hashes.map.with_index do |part, index|
-          new_hash = {}
-          part.each do |k, v|
-            new_hash[k] = (rand > 0.5) ? v : second_gene_hashes[index][k]
+        new_information = first_gene.to_hashes.map.with_index do |part, index|
+          part.to_h do |key, value|
+            [key, @random.rand > 0.5 ? value : second_gene_hashes[index][key]]
           end
-          new_hash
         end
         Gene.new(information: new_information,
                  fitness_evaluator: first_gene.fitness_evaluator,

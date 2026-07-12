@@ -10,7 +10,7 @@ module GeneGenie
       let(:second_information) { [{ a: 30, b: 40 }, { c: 70, d: 60 }] }
 
       let(:first_gene) do
-        GeneGenie::Gene.new(information: information,
+        GeneGenie::Gene.new(information:,
                             fitness_evaluator: sample_fitness_evaluator)
       end
       let(:second_gene) do

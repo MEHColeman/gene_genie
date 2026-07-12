@@ -2,7 +2,7 @@ require 'gene_genie/mutator/null_mutator'
 
 module GeneGenie
   RSpec.describe NullMutator do
-    let(:hash_under_test) { { a: 1, b: 2, c: 3, d: 4, } }
+    let(:hash_under_test) { { a: 1, b: 2, c: 3, d: 4 } }
     subject { NullMutator.new }
 
     describe '#call' do

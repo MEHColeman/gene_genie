@@ -27,7 +27,7 @@ module GeneGenie
       )
     end
 
-    subject { ProportionalSelector.new }
+    subject { ProportionalSelector.new(random: Random.new(42)) }
 
     describe '#call' do
       it 'selects two genes' do
@@ -49,6 +49,22 @@ module GeneGenie
         expect((totals[gene_three] - 6600).abs).to be < 300, 'Proportions wrong'
         expect((totals[gene_two] - 3300).abs).to be < 300, 'Proportions wrong'
         expect((totals[gene_one] - 100).abs).to be < 300, 'Proportions wrong'
+      end
+
+      it 'falls back to uniform selection when all genes have equal fitness' do
+        equal_genes = Array.new(3) do |i|
+          Gene.new(information: [{ a: i + 1, b: 0 }],
+                   fitness_evaluator: sample_fitness_evaluator)
+        end
+        plateau_pool = GenePool.new(
+          template: [{}],
+          fitness_evaluator: sample_fitness_evaluator,
+          gene_factory: CustomGeneFactory.new(equal_genes)
+        )
+
+        picks = Array.new(200) { subject.call(plateau_pool) }.flatten
+
+        expect(picks.uniq.size).to eq 3
       end
     end
   end

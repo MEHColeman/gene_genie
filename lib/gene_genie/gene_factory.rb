@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 require_relative 'gene'
-require_relative 'combiner/weighted_average_combiner'
+require_relative 'combiner/one_point_combiner'
 
 module GeneGenie
   # GeneFactory
@@ -8,18 +10,17 @@ module GeneGenie
   # The default implementation will produce random genes, but other approaches
   # could be taken.
   class GeneFactory
-    def initialize(template, fitness_evaluator, gene_combiner=nil)
+    # @param random [Random] source of randomness - pass a seeded instance
+    #   for reproducible gene creation
+    def initialize(template, fitness_evaluator, gene_combiner = nil, random: Random.new)
       @template = template
       @fitness_evaluator = fitness_evaluator
-      @combiner = gene_combiner || GeneGenie::Combiner::WeightedAverageCombiner.new
+      @random = random
+      @combiner = gene_combiner || Combiner::OnePointCombiner.new(random:)
     end
 
     def create(size = 1)
-      genes = []
-      size.times do
-        genes << create_gene_from_template
-      end
-      genes
+      Array.new(size) { create_gene_from_template }
     end
 
     private
@@ -34,11 +35,7 @@ module GeneGenie
     end
 
     def create_hash_from_template_part(part)
-      new_hash = {}
-      part.each do |k, v|
-        new_hash[k] = rand(v)
-      end
-      new_hash
+      part.transform_values { |range| @random.rand(range) }
     end
   end
 end

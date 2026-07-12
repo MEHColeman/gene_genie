@@ -1,5 +1,6 @@
 require 'gene_genie/gene_pool'
 
+require 'support/custom_gene_factory'
 require 'support/samples'
 
 module GeneGenie
@@ -36,7 +37,7 @@ module GeneGenie
 
         GenePool.new(template: sample_template,
                      fitness_evaluator: sample_fitness_evaluator,
-                     gene_factory: gene_factory)
+                     gene_factory:)
       end
 
       it 'takes an optional gene mutator' do
@@ -47,7 +48,7 @@ module GeneGenie
 
         GenePool.new(template: sample_template,
                      fitness_evaluator: sample_fitness_evaluator,
-                     gene_factory: gene_factory,
+                     gene_factory:,
                      size: 10,
                      mutator: gene_mutator)
       end
@@ -61,7 +62,7 @@ module GeneGenie
 
         GenePool.new(template: sample_template,
                      fitness_evaluator: sample_fitness_evaluator,
-                     gene_factory: gene_factory,
+                     gene_factory:,
                      size: 10,
                      mutator: gene_mutator,
                      selector: gene_selector)
@@ -88,7 +89,7 @@ module GeneGenie
 
         gene_pool = GenePool.new(template: sample_template,
                                  fitness_evaluator: sample_fitness_evaluator,
-                                 gene_factory: gene_factory)
+                                 gene_factory:)
 
         expect(gene_pool.best).to eq c
       end
@@ -106,7 +107,7 @@ module GeneGenie
 
         gene_pool = GenePool.new(template: sample_template,
                                  fitness_evaluator: sample_fitness_evaluator,
-                                 gene_factory: gene_factory)
+                                 gene_factory:)
 
         expect(gene_pool.worst).to eq a
       end
@@ -124,7 +125,7 @@ module GeneGenie
 
         gene_pool = GenePool.new(template: sample_template,
                                  fitness_evaluator: sample_fitness_evaluator,
-                                 gene_factory: gene_factory)
+                                 gene_factory:)
 
         expect(gene_pool.total_fitness).to eq 201
       end
@@ -142,14 +143,14 @@ module GeneGenie
 
         gene_pool = GenePool.new(template: sample_template,
                                  fitness_evaluator: sample_fitness_evaluator,
-                                 gene_factory: gene_factory)
+                                 gene_factory:)
 
         expect(gene_pool.total_normalised_fitness).to eq 180
       end
     end
 
     describe '#genes' do
-      it 'returns the araray of genes' do
+      it 'returns the array of genes' do
         expect(subject.genes).to be_kind_of(Array)
         expect(subject.genes[0]).to be_kind_of(Gene)
       end
@@ -166,8 +167,20 @@ module GeneGenie
         end
       end
 
-      it 'combines genes based on their score to create a new set of genes' do
-        # pending
+      it 'carries the best gene into the next generation unchanged (elitism)' do
+        best_before = subject.best
+
+        subject.evolve
+
+        expect(subject.genes).to include best_before
+      end
+
+      it 'never lets the best fitness in the pool regress' do
+        best_fitness_before = subject.best_fitness
+
+        subject.evolve
+
+        expect(subject.best_fitness).to be >= best_fitness_before
       end
 
       it 'notifies all the registered listeners' do
@@ -176,6 +189,32 @@ module GeneGenie
 
         subject.register_listener(listener)
         subject.evolve
+      end
+    end
+
+    describe '#best_ever' do
+      it 'remembers the best gene from the initial population, even if evolution regresses' do
+        champion = Gene.new(information: [{ a: 100, b: 100 }],
+                            fitness_evaluator: sample_fitness_evaluator)
+        losers = Array.new(2) do
+          Gene.new(information: [{ a: 1, b: 2 }],
+                   fitness_evaluator: sample_fitness_evaluator)
+        end
+        degrading_mutator = lambda do |information|
+          information.each do |hash|
+            hash[:a] = 1
+            hash[:b] = 2
+          end
+        end
+
+        gene_pool = GenePool.new(template: sample_template,
+                                 fitness_evaluator: sample_fitness_evaluator,
+                                 gene_factory: CustomGeneFactory.new([champion] + losers),
+                                 mutator: degrading_mutator,
+                                 elitism: 0)
+        gene_pool.evolve
+
+        expect(gene_pool.best_ever.fitness).to eq 10_000
       end
     end
 
@@ -201,7 +240,7 @@ module GeneGenie
 
         gene_pool = GenePool.new(template: sample_template,
                                  fitness_evaluator: sample_fitness_evaluator,
-                                 gene_factory: gene_factory)
+                                 gene_factory:)
 
         expect(gene_pool.best_fitness).to eq 100
       end
@@ -219,7 +258,7 @@ module GeneGenie
 
         gene_pool = GenePool.new(template: sample_template,
                                  fitness_evaluator: sample_fitness_evaluator,
-                                 gene_factory: gene_factory)
+                                 gene_factory:)
 
         expect(gene_pool.worst_fitness).to eq 1
       end
@@ -237,7 +276,7 @@ module GeneGenie
 
         gene_pool = GenePool.new(template: sample_template,
                                  fitness_evaluator: sample_fitness_evaluator,
-                                 gene_factory: gene_factory)
+                                 gene_factory:)
 
         expect(gene_pool.average_fitness).to eq 34
       end

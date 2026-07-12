@@ -30,10 +30,9 @@ module GeneGenie
       end
       it 'can take a template of an array of hashes' do
         template = [{ a: 1..100, b: 2..100 },
-                    { c:1..1000, d: 4..8},
-                    { e:0..1,    f: 1..9}]
+                    { c: 1..1000, d: 4..8 },
+                    { e: 0..1,    f: 1..9 }]
         test_subject = GeneFactory.new(template, sample_fitness_evaluator)
-        genes = test_subject.create(30)
 
         expect(test_subject.create(100).size).to eq 100
       end

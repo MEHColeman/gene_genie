@@ -1,31 +1,38 @@
+# frozen_string_literal: true
+
 module GeneGenie
-  # A simple gene selection algorithm.
-  # Genes are ordered by score.
-  # Effectively, a loaded coin is tossed. If it's heads, the top gene is
-  # selected, otherwise, continue down the list until a head comes up.
-  # The coin is loaded, so that there is a reasonable spread throughout the
-  # gene population, but the better the gene, the more likely it is to turn up.
+  # A simple rank-based gene selection algorithm.
+  # Genes are ordered by fitness, best first, and a loaded coin is flipped
+  # for each gene in turn - the first gene to flip heads is selected,
+  # wrapping around to the top of the list if none does. The coin is loaded
+  # so that there is a reasonable spread throughout the gene population, but
+  # the better the gene, the more likely it is to be picked.
+  # The two selected genes are distinct whenever the pool holds more than
+  # one gene.
   class CoinFlipSelector
+    # @param random [Random] source of randomness - pass a seeded instance
+    #   for reproducible selection
+    def initialize(random: Random.new)
+      @random = random
+    end
+
+    # @param pool [GenePool] the pool of genes; must respond to +genes+
+    # @return [Array<Gene>] an array containing two selected genes
     def call(pool)
-      # a very simple selection - pick by sorted order
-      # pick two different genes
-      selectees = pool.genes.sort.reverse
-      first, second = nil, nil
-      probability = [((1.0 / pool.size) * 3), 0.8].min
-      while !first || !second do
-        selectees.each do |s|
-          if rand < probability
-            selectees.delete(s)
-            if !first
-              first = s
-              break
-            else
-              second = s
-            end
-          end
-        end
-      end
+      ranked = pool.genes.sort_by { |gene| -gene.fitness }
+      first = pick(ranked)
+      remaining = ranked - [first]
+      second = remaining.empty? ? first : pick(remaining)
       [first, second]
+    end
+
+    private
+
+    def pick(ranked)
+      probability = [3.0 / ranked.size, 0.8].min
+      loop do
+        ranked.each { |gene| return gene if @random.rand < probability }
+      end
     end
   end
 end

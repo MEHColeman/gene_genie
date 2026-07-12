@@ -1,5 +1,9 @@
+# frozen_string_literal: true
+
 module GeneGenie
   module Listener
+    # A listener that logs pool statistics after each generation to the
+    # logger it is constructed with.
     class LoggingListener
       def initialize(logger)
         @logger = logger

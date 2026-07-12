@@ -5,12 +5,12 @@ require 'support/samples'
 
 module GeneGenie
   module Combiner
-    describe WeightedAverageCombiner do
+    RSpec.describe WeightedAverageCombiner do
       let(:information)        { [{ a: 10, b: 20 }, { c: 30, d: 40 }] }
       let(:second_information) { [{ a: 30, b: 40 }, { c: 70, d: 60 }] }
 
       let(:first_gene) do
-        GeneGenie::Gene.new(information: information,
+        GeneGenie::Gene.new(information:,
                             fitness_evaluator: sample_fitness_evaluator)
       end
       let(:second_gene) do

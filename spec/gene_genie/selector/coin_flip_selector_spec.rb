@@ -7,18 +7,25 @@ require 'support/samples'
 
 module GeneGenie
   RSpec.describe CoinFlipSelector do
-    let(:gene_one)   { Gene.new(information: [{a: 2, b:4}],
-                                fitness_evaluator: sample_fitness_evaluator) }
-    let(:gene_two)   { Gene.new(information: [{a: 6, b:5}],
-                                fitness_evaluator: sample_fitness_evaluator) }
-    let(:gene_three) { Gene.new(information: [{a: 8, b:6}],
-                                fitness_evaluator: sample_fitness_evaluator) }
-    let(:pool) { GenePool.new( template: [{}],
-                              fitness_evaluator: sample_fitness_evaluator,
-                              gene_factory: CustomGeneFactory.new([ gene_one, gene_two, gene_three]),
-                             )}
+    let(:gene_one) do
+      Gene.new(information: [{ a: 2, b: 4 }],
+               fitness_evaluator: sample_fitness_evaluator)
+    end
+    let(:gene_two) do
+      Gene.new(information: [{ a: 6, b: 5 }],
+               fitness_evaluator: sample_fitness_evaluator)
+    end
+    let(:gene_three) do
+      Gene.new(information: [{ a: 8, b: 6 }],
+               fitness_evaluator: sample_fitness_evaluator)
+    end
+    let(:pool) do
+      GenePool.new(template: [{}],
+                   fitness_evaluator: sample_fitness_evaluator,
+                   gene_factory: CustomGeneFactory.new([gene_one, gene_two, gene_three]))
+    end
 
-    subject { CoinFlipSelector.new }
+    subject { CoinFlipSelector.new(random: Random.new(42)) }
 
     describe '#call' do
       it 'selects two genes' do
@@ -28,10 +35,15 @@ module GeneGenie
         expect(result.last).to be_kind_of Gene
       end
 
+      it 'selects two distinct genes' do
+        result = subject.call(pool)
+        expect(result.first).not_to equal result.last
+      end
+
       it 'selects the best genes more often, eventually' do
         totals = Hash.new(0)
         1000.times do
-          subject.call(pool).each { |gene| totals[gene] +=1 }
+          subject.call(pool).each { |gene| totals[gene] += 1 }
         end
 
         expect(totals[gene_three]).to be > totals[gene_two]

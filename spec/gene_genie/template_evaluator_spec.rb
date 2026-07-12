@@ -21,34 +21,34 @@ module GeneGenie
         c: 3..5,
         d: 10..20
       },
-      {
-        e: 35..45,
-        f: 0..9,
-        g: 1..10
-      }]
+       {
+         e: 35..45,
+         f: 0..9,
+         g: 1..10
+       }]
     end
     let(:normal_check_evaluator) { TemplateEvaluator.new(normal_check_template) }
 
     let(:huge_check_template) do
       [{
-        a: 1..300000,
-        b: 1..300000,
-        c: 3..900000
+        a: 1..300_000,
+        b: 1..300_000,
+        c: 3..900_000
       },
-      {
-        d: 1..200000,
-        e: 1..500000,
-        f: 300..800000,
-        g: 300..900000,
-        h: 1..1000000
-      },
-      {
-        d: 1..200000,
-        e: 1..500000,
-        f: 300..800000,
-        g: 300..900000,
-        h: 1..1000000
-      }]
+       {
+         d: 1..200_000,
+         e: 1..500_000,
+         f: 300..800_000,
+         g: 300..900_000,
+         h: 1..1_000_000
+       },
+       {
+         d: 1..200_000,
+         e: 1..500_000,
+         f: 300..800_000,
+         g: 300..900_000,
+         h: 1..1_000_000
+       }]
     end
     let(:huge_check_evaluator) { TemplateEvaluator.new(huge_check_template) }
 
@@ -59,13 +59,14 @@ module GeneGenie
     end
 
     describe '#permutations' do
-      it 'returns a value indicating how many possible permutations of the /
-          template there are' do
-            expect(subject.permutations).to eq 9900
-            expect(tiny_check_evaluator.permutations).to eq 3
-            expect(normal_check_evaluator.permutations).to eq 10_890_000
-            expect(huge_check_evaluator.permutations).to eq 419310500559333850295144120158200000000000000000000000000000000000000000000
-          end
+      it 'returns a value indicating how many possible permutations of the template there are' do
+        huge = 4_193_105_005_593_338_502_951_441_201_582 * (10**44)
+
+        expect(subject.permutations).to eq 9900
+        expect(tiny_check_evaluator.permutations).to eq 3
+        expect(normal_check_evaluator.permutations).to eq 10_890_000
+        expect(huge_check_evaluator.permutations).to eq huge
+      end
     end
 
     describe '#recommended_size' do
@@ -86,7 +87,7 @@ module GeneGenie
       end
 
       it 'returns a maximum of 20000' do
-        expect(huge_check_evaluator.recommended_size).to eq 20000
+        expect(huge_check_evaluator.recommended_size).to eq 20_000
       end
     end
 
