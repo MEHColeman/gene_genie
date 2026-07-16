@@ -13,7 +13,7 @@ module GeneGenie
     # @param random [Random] source of randomness - pass a seeded instance
     #   for reproducible gene creation
     def initialize(template, fitness_evaluator, gene_combiner = nil, random: Random.new)
-      @template = template
+      @template = template.is_a?(Hash) ? [template] : template
       @fitness_evaluator = fitness_evaluator
       @random = random
       @combiner = gene_combiner || Combiner::OnePointCombiner.new(random:)

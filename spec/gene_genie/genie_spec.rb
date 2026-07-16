@@ -62,6 +62,17 @@ module GeneGenie
         expect(genie.best_fitness).to be >= 0
       end
 
+      it 'works with user-built components constructed from a bare Hash template' do
+        template = { a: 1..100, b: 2..100 }
+        genie = Genie.new(template, seed: 42,
+                                    mutator: Mutator::SimpleGeneMutator.new(template, 0.02),
+                                    size: TemplateEvaluator.new(template).recommended_size) do |params|
+          params[:a] * params[:b]
+        end
+
+        expect { genie.optimise(5) }.not_to raise_error
+      end
+
       it 'passes size, elitism and component overrides through to the pool' do
         selector = Selector::TournamentSelector.new(random: Random.new(1))
         genie = Genie.new(sample_template, sample_fitness_evaluator,

@@ -10,7 +10,7 @@ module GeneGenie
       # @param random [Random] source of randomness - pass a seeded instance
       #   for reproducible mutation
       def initialize(template, mutation_rate = 0.01, random: Random.new)
-        @template = template
+        @template = template.is_a?(Hash) ? [template] : template
         @mutation_rate = mutation_rate
         @random = random
       end

@@ -13,7 +13,7 @@ module GeneGenie
     CONTINUOUS_OPTION_COUNT = 1000
 
     def initialize(template)
-      @template = template
+      @template = template.is_a?(Hash) ? [template] : template
     end
 
     def permutations
@@ -38,6 +38,7 @@ module GeneGenie
     # Verifies that the given hash conforms to the constraints specified in
     # the hash template
     def hash_valid?(hash_under_test)
+      hash_under_test = [hash_under_test] if hash_under_test.is_a?(Hash)
       @template.each_with_index do |part, index|
         part.each do |key, options|
           value = hash_under_test[index][key]

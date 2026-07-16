@@ -36,6 +36,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Gene#==`/`#hash` (information equality) and a readable `Gene#inspect`.
 - `GenePool#unregister_listener`.
 
+### Fixed
+
+- All template-taking components (`GeneFactory`, `TemplateEvaluator`,
+  `Mutator::SimpleGeneMutator`, `Mutator::NudgeMutator`) accept bare Hash
+  templates too, so components you build from the same template you hand
+  to `Genie` just work. `TemplateEvaluator#hash_valid?` likewise accepts a
+  bare hash.
+
 ### Changed
 
 - Mutators and selectors moved into `GeneGenie::Mutator::` and
