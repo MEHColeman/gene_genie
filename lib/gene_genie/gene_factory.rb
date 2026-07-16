@@ -35,7 +35,11 @@ module GeneGenie
     end
 
     def create_hash_from_template_part(part)
-      part.transform_values { |range| @random.rand(range) }
+      part.transform_values { |options| sample_value(options) }
+    end
+
+    def sample_value(options)
+      options.is_a?(Array) ? options.sample(random: @random) : @random.rand(options)
     end
   end
 end

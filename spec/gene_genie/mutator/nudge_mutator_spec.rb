@@ -2,7 +2,7 @@ require 'gene_genie/mutator/nudge_mutator'
 require 'gene_genie/template_evaluator'
 
 module GeneGenie
-  RSpec.describe NudgeMutator do
+  RSpec.describe Mutator::NudgeMutator do
     let(:template) do
       [{
         a: 1..1000,
@@ -29,12 +29,12 @@ module GeneGenie
       }]
     end
 
-    subject { NudgeMutator.new(template, mutation_rate, random: Random.new(42)) }
+    subject { Mutator::NudgeMutator.new(template, mutation_rate, random: Random.new(42)) }
 
     describe '#initialize' do
       it 'is initialised with a gene template and a mutation rate' do
-        gm = NudgeMutator.new(template, mutation_rate)
-        expect(gm).to be_kind_of NudgeMutator
+        gm = Mutator::NudgeMutator.new(template, mutation_rate)
+        expect(gm).to be_kind_of Mutator::NudgeMutator
       end
     end
 
@@ -56,6 +56,27 @@ module GeneGenie
           hash.each do |k, v|
             expect((v - new_hash[index][k]).abs).to be <= 50
           end
+        end
+      end
+
+      it 'nudges float ranges continuously, staying in range' do
+        float_template = [{ x: 0.0..10.0 }]
+        mutator = Mutator::NudgeMutator.new(float_template, 1.0, random: Random.new(42))
+
+        20.times do
+          value = mutator.call([{ x: 5.0 }]).first[:x]
+          expect(value).to be_a(Float).and be_between(4.5, 5.5)
+        end
+      end
+
+      it 'nudges arrays of choices to nearby positions' do
+        list = %i[a b c d e f g h i j]
+        list_template = [{ letter: list }]
+        mutator = Mutator::NudgeMutator.new(list_template, 1.0, random: Random.new(42))
+
+        20.times do
+          value = mutator.call([{ letter: :e }]).first[:letter]
+          expect(%i[d e f]).to include value
         end
       end
     end

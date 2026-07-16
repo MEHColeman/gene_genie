@@ -25,6 +25,101 @@ module GeneGenie
         expect(genie_a.best).to eq genie_b.best
         expect(genie_a.best_fitness).to eq genie_b.best_fitness
       end
+
+      it 'accepts a bare Hash template and returns best in the same shape' do
+        genie = Genie.new({ a: 1..100, b: 2..100 }, seed: 42) { |params| params[:a] * params[:b] }
+        genie.optimise(50)
+
+        expect(genie.best).to be_kind_of Hash
+        expect(genie.best_fitness).to eq genie.best[:a] * genie.best[:b]
+      end
+
+      it 'accepts the fitness function as a block' do
+        genie = Genie.new(sample_template, seed: 42) do |params|
+          params.first.each_value.reduce(:*)
+        end
+
+        expect(genie.optimise(20)).to eq true
+      end
+
+      it 'rejects both an evaluator and a block' do
+        expect do
+          Genie.new(sample_template, sample_fitness_evaluator) { |p| p }
+        end.to raise_error ArgumentError
+      end
+
+      it 'rejects a missing fitness function' do
+        expect { Genie.new(sample_template) }.to raise_error ArgumentError
+      end
+
+      it 'can minimise instead of maximise' do
+        genie = Genie.new({ a: -100..100 }, seed: 42, direction: :minimise) do |params|
+          (params[:a] - 7)**2
+        end
+        genie.optimise
+
+        expect(genie.best[:a]).to be_within(5).of(7)
+        expect(genie.best_fitness).to be >= 0
+      end
+
+      it 'passes size, elitism and component overrides through to the pool' do
+        selector = Selector::TournamentSelector.new(random: Random.new(1))
+        genie = Genie.new(sample_template, sample_fitness_evaluator,
+                          seed: 42, size: 12, selector:,
+                          combiner: Combiner::UniformCombiner.new(random: Random.new(1)),
+                          mutator: Mutator::NullMutator.new,
+                          elitism: 2)
+
+        expect(genie.gene_pool.size).to eq 12
+        expect(genie.optimise(10)).to be(true).or be(false)
+      end
+    end
+
+    describe '#run' do
+      it 'returns a Result with best, fitness, counts and history' do
+        result = genie.run(max_generations: 10)
+
+        expect(result).to be_kind_of Result
+        expect(result.best).to eq genie.best
+        expect(result.best_fitness).to eq genie.best_fitness
+        expect(result.generations).to eq 10
+        expect(result.evaluations).to be > 0
+        expect(result.elapsed).to be > 0
+        expect(result.history.size).to eq 10
+        expect(result.history.last.generation).to eq 10
+        expect(result.history.last.best_fitness).to eq genie.best_fitness
+      end
+
+      it 'stops when the target fitness is reached' do
+        result = genie.run(target_fitness: 5000, max_generations: 1000)
+
+        expect(genie.best_fitness).to be >= 5000
+        expect(result.generations).to be < 1000
+      end
+
+      it 'translates the target fitness when minimising' do
+        genie = Genie.new({ a: -100..100 }, seed: 42, direction: :minimise) do |params|
+          (params[:a] - 7)**2
+        end
+        genie.run(target_fitness: 100, max_generations: 1000)
+
+        expect(genie.best_fitness).to be <= 100
+      end
+
+      it 'accepts a custom termination criterion' do
+        result = genie.run(termination: ->(pool) { pool.generation >= 3 })
+
+        expect(result.generations).to eq 3
+      end
+
+      it 'reports minimisation history in the user fitness space' do
+        genie = Genie.new({ a: -100..100 }, seed: 42, direction: :minimise) do |params|
+          (params[:a] - 7)**2
+        end
+        result = genie.run(max_generations: 5)
+
+        expect(result.history.map(&:best_fitness).min).to be >= 0
+      end
     end
 
     describe '#optimise' do

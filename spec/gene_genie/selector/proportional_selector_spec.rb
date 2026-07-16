@@ -6,7 +6,7 @@ require 'support/custom_gene_factory'
 require 'support/samples'
 
 module GeneGenie
-  RSpec.describe ProportionalSelector do
+  RSpec.describe Selector::ProportionalSelector do
     let(:gene_one) do
       Gene.new(information: [{ a: 1, b: 1 }],
                fitness_evaluator: sample_fitness_evaluator)
@@ -27,7 +27,7 @@ module GeneGenie
       )
     end
 
-    subject { ProportionalSelector.new(random: Random.new(42)) }
+    subject { Selector::ProportionalSelector.new(random: Random.new(42)) }
 
     describe '#call' do
       it 'selects two genes' do

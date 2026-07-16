@@ -67,6 +67,18 @@ module GeneGenie
         expect(normal_check_evaluator.permutations).to eq 10_890_000
         expect(huge_check_evaluator.permutations).to eq huge
       end
+
+      it 'counts arrays of choices by their length' do
+        evaluator = TemplateEvaluator.new([{ fruit: %i[apple banana orange], b: 1..10 }])
+
+        expect(evaluator.permutations).to eq 30
+      end
+
+      it 'uses a nominal count for continuous float ranges' do
+        evaluator = TemplateEvaluator.new([{ x: 0.0..1.0 }])
+
+        expect(evaluator.permutations).to eq TemplateEvaluator::CONTINUOUS_OPTION_COUNT
+      end
     end
 
     describe '#recommended_size' do
@@ -99,6 +111,14 @@ module GeneGenie
       it 'returns false when the specified hash is invalid for the template' do
         expect(subject.hash_valid?([{ a: 3 }])).to be_falsey
         expect(subject.hash_valid?([{ b: 3, c: 50 }])).to be_falsey
+      end
+
+      it 'validates float ranges and arrays of choices' do
+        evaluator = TemplateEvaluator.new([{ x: 0.0..1.0, fruit: %i[apple banana] }])
+
+        expect(evaluator.hash_valid?([{ x: 0.5, fruit: :banana }])).to be true
+        expect(evaluator.hash_valid?([{ x: 1.5, fruit: :banana }])).to be false
+        expect(evaluator.hash_valid?([{ x: 0.5, fruit: :grape }])).to be false
       end
     end
   end

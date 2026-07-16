@@ -3,16 +3,22 @@
 module GeneGenie
   # A Template Evaluator provides certain analysis and useful information
   # about templates.
-  # A template is always treated internally as an Array of Hashes.
+  # A template is always treated internally as an Array of Hashes. Each
+  # value in a hash describes an allele's options: an integer range, a
+  # float range (treated as continuous), or an array of choices.
   # @since 0.0.2
   class TemplateEvaluator
+    # Float ranges are continuous, so they have no real permutation count;
+    # this nominal count stands in for one when sizing pools.
+    CONTINUOUS_OPTION_COUNT = 1000
+
     def initialize(template)
       @template = template
     end
 
     def permutations
       @permutations ||= @template.map do |hash|
-        hash.map { |_, v| v.size }.reduce(:*)
+        hash.map { |_, options| option_count(options) }.reduce(:*)
       end.reduce(:*)
     end
 
@@ -33,16 +39,36 @@ module GeneGenie
     # the hash template
     def hash_valid?(hash_under_test)
       @template.each_with_index do |part, index|
-        part.each do |key, range|
+        part.each do |key, options|
           value = hash_under_test[index][key]
-          return false unless value
-          return false unless value >= range.min
-          return false unless value <= range.max
+          return false if value.nil?
+          return false unless covers?(options, value)
         end
       end
       true
     rescue StandardError
       false
+    end
+
+    private
+
+    def option_count(options)
+      case options
+      when Array
+        options.size
+      when Range
+        continuous?(options) ? CONTINUOUS_OPTION_COUNT : options.size
+      else
+        raise ArgumentError, "unsupported template options: #{options.inspect}"
+      end
+    end
+
+    def continuous?(range)
+      range.begin.is_a?(Float) || range.end.is_a?(Float)
+    end
+
+    def covers?(options, value)
+      options.is_a?(Array) ? options.include?(value) : options.cover?(value)
     end
   end
 end

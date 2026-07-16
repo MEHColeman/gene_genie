@@ -1,9 +1,9 @@
 require 'gene_genie/mutator/null_mutator'
 
 module GeneGenie
-  RSpec.describe NullMutator do
+  RSpec.describe Mutator::NullMutator do
     let(:hash_under_test) { { a: 1, b: 2, c: 3, d: 4 } }
-    subject { NullMutator.new }
+    subject { Mutator::NullMutator.new }
 
     describe '#call' do
       it 'returns the same hash, mutating nothing' do

@@ -95,6 +95,26 @@ module GeneGenie
       end
     end
 
+    describe '#==' do
+      it 'considers genes with the same information equal' do
+        same = Gene.new(information: [{ a: 10, b: 20 }, { c: 30, d: 40 }],
+                        fitness_evaluator: double(:other_evaluator))
+        different = Gene.new(information: [{ a: 11, b: 20 }, { c: 30, d: 40 }],
+                             fitness_evaluator:)
+
+        expect(subject).to eq same
+        expect(subject.hash).to eq same.hash
+        expect(subject).not_to eq different
+        expect(subject).not_to eq :not_a_gene
+      end
+    end
+
+    describe '#inspect' do
+      it 'shows the information and fitness' do
+        expect(subject.inspect).to include 'a', '10', 'fitness'
+      end
+    end
+
     describe '#combine' do
       it 'calls the configured gene combiner' do
         gene_combiner = double :gene_combiner

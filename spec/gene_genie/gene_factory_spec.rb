@@ -36,6 +36,18 @@ module GeneGenie
 
         expect(test_subject.create(100).size).to eq 100
       end
+
+      it 'samples float ranges and arrays of choices' do
+        template = [{ x: 0.0..1.0, fruit: %i[apple banana orange] }]
+        test_subject = GeneFactory.new(template, sample_fitness_evaluator,
+                                       random: Random.new(42))
+
+        test_subject.create(20).each do |gene|
+          values = gene.to_hashes.first
+          expect(values[:x]).to be_a(Float).and be_between(0.0, 1.0)
+          expect(%i[apple banana orange]).to include values[:fruit]
+        end
+      end
     end
   end
 end

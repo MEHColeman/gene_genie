@@ -49,5 +49,21 @@ module GeneGenie
     def <=>(other)
       fitness <=> other.fitness
     end
+
+    # Genes are equal when they hold the same information. Note that genes
+    # are mutable (see #mutate), so avoid using them as Hash keys across
+    # mutations.
+    def ==(other)
+      other.is_a?(Gene) && to_hashes == other.to_hashes
+    end
+    alias eql? ==
+
+    def hash
+      @information.hash
+    end
+
+    def inspect
+      "#<GeneGenie::Gene #{@information.inspect} fitness=#{@fitness.inspect}>"
+    end
   end
 end

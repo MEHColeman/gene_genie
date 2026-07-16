@@ -19,9 +19,10 @@ module GeneGenie
                    fitness_evaluator:,
                    gene_factory:,
                    size: 10,
-                   mutator: NullMutator.new,
-                   selector: ProportionalSelector.new,
+                   mutator: Mutator::NullMutator.new,
+                   selector: Selector::ProportionalSelector.new,
                    elitism: 1)
+      template = [template] if template.is_a?(Hash)
       self.class.validate_template!(template)
       unless fitness_evaluator.respond_to?(:fitness)
         raise ArgumentError, 'fitness_evaluator must respond to fitness'
@@ -38,22 +39,35 @@ module GeneGenie
     end
 
     # build a GenePool with a reasonable set of defaults.
-    # You only need to specify the minimum no. of parameters.
+    # You only need to specify the minimum no. of parameters; any component
+    # you don't supply is built for you.
     # @param random [Random] source of randomness for the pool's components -
     #   pass a seeded instance for a reproducible run
-    def self.build(template, fitness_evaluator, random: Random.new)
+    # @param size [Integer, nil] population size (default: recommended for
+    #   the template)
+    # @param mutator [#call, nil] gene mutator (default: NudgeMutator)
+    # @param selector [#call, nil] parent selector (default:
+    #   ProportionalSelector)
+    # @param combiner [#call, nil] gene combiner (default: OnePointCombiner)
+    # @param elitism [Integer] top genes carried over unchanged each
+    #   generation
+    def self.build(template, fitness_evaluator, random: Random.new, size: nil,
+                   mutator: nil, selector: nil, combiner: nil, elitism: 1)
+      template = [template] if template.is_a?(Hash)
       validate_template!(template)
-      gene_mutator = NudgeMutator.new(template, random:)
-      gene_factory = GeneFactory.new(template, fitness_evaluator, random:)
-      selector = ProportionalSelector.new(random:)
+      mutator ||= Mutator::NudgeMutator.new(template, random:)
+      combiner ||= Combiner::OnePointCombiner.new(random:)
+      selector ||= Selector::ProportionalSelector.new(random:)
+      gene_factory = GeneFactory.new(template, fitness_evaluator, combiner, random:)
+      size ||= TemplateEvaluator.new(template).recommended_size
 
-      size = TemplateEvaluator.new(template).recommended_size
       GenePool.new(template:,
                    fitness_evaluator:,
                    gene_factory:,
                    size:,
-                   mutator: gene_mutator,
-                   selector:)
+                   mutator:,
+                   selector:,
+                   elitism:)
     end
 
     def self.validate_template!(template)
@@ -65,6 +79,10 @@ module GeneGenie
 
     def register_listener(listener)
       @listeners << listener
+    end
+
+    def unregister_listener(listener)
+      @listeners.delete(listener)
     end
 
     def size

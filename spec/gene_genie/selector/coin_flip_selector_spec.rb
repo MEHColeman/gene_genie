@@ -6,7 +6,7 @@ require 'support/custom_gene_factory'
 require 'support/samples'
 
 module GeneGenie
-  RSpec.describe CoinFlipSelector do
+  RSpec.describe Selector::CoinFlipSelector do
     let(:gene_one) do
       Gene.new(information: [{ a: 2, b: 4 }],
                fitness_evaluator: sample_fitness_evaluator)
@@ -25,7 +25,7 @@ module GeneGenie
                    gene_factory: CustomGeneFactory.new([gene_one, gene_two, gene_three]))
     end
 
-    subject { CoinFlipSelector.new(random: Random.new(42)) }
+    subject { Selector::CoinFlipSelector.new(random: Random.new(42)) }
 
     describe '#call' do
       it 'selects two genes' do

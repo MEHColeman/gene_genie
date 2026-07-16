@@ -2,7 +2,7 @@ require 'gene_genie/mutator/simple_gene_mutator'
 require 'gene_genie/template_evaluator'
 
 module GeneGenie
-  RSpec.describe SimpleGeneMutator do
+  RSpec.describe Mutator::SimpleGeneMutator do
     let(:template) do
       [{
         a: 1..1000,
@@ -29,12 +29,12 @@ module GeneGenie
       }]
     end
 
-    subject { SimpleGeneMutator.new(template, mutation_rate, random: Random.new(42)) }
+    subject { Mutator::SimpleGeneMutator.new(template, mutation_rate, random: Random.new(42)) }
 
     describe '#initialize' do
       it 'is initialised with a gene template and a mutation rate' do
-        gm = SimpleGeneMutator.new(template, mutation_rate)
-        expect(gm).to be_kind_of(SimpleGeneMutator)
+        gm = Mutator::SimpleGeneMutator.new(template, mutation_rate)
+        expect(gm).to be_kind_of(Mutator::SimpleGeneMutator)
       end
     end
 
