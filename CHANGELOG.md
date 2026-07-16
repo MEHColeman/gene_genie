@@ -5,6 +5,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-07-16
+
+### Added
+
+- Composable termination criteria (`GeneGenie::Termination`):
+  `MaxGenerations`, `TargetFitness`, `Stagnation`, `MaxTime`, combinable
+  with `|`; any `call(pool)`-able object works too.
+- `Genie#run`, which optimises and returns a `GeneGenie::Result` - best
+  parameters, best fitness, generations, fitness-evaluation count, elapsed
+  time and a per-generation history of best/average fitness. Accepts
+  `max_generations:`, `target_fitness:`, `patience:`, `max_time:` and
+  `termination:` options, which also work on `optimise`.
+- Bare `Hash` templates: `Genie.new(a: 1..10) { ... }`. `best` is returned
+  in the same shape as the template you supplied.
+- Fitness functions can be a block, lambda or any `#call`-able, as well as
+  any object with a `#fitness` method.
+- `direction: :minimise` (also `:minimize`) - scores are negated internally
+  and reported back in your fitness space.
+- Float ranges (`-5.0..5.0`) and arrays of choices (`[:red, :green]`) as
+  template values, supported across the factory, mutators, validator and
+  pool sizing.
+- `Genie.new` passes `size:`, `mutator:`, `selector:`, `combiner:` and
+  `elitism:` through to the pool, so simple runs no longer need to drop
+  down to `GenePool`.
+- `Selector::TournamentSelector` - robust, scale-insensitive parent
+  selection.
+- `GeneGenie::FitnessAdapter`, wrapping user fitness functions for direct
+  `GenePool` use; counts evaluations.
+- `Gene#==`/`#hash` (information equality) and a readable `Gene#inspect`.
+- `GenePool#unregister_listener`.
+
+### Changed
+
+- Mutators and selectors moved into `GeneGenie::Mutator::` and
+  `GeneGenie::Selector::` namespaces, matching their directories and the
+  existing `Combiner::` namespace. Top-level aliases remain and are
+  deprecated; they will be removed in 1.0.
+- `WeightedAverageCombiner` keeps float precision for float alleles
+  (integer alleles still round).
+- New examples: `examples/float_optimisation.rb` (float minimisation with
+  Result stats) and `examples/knapsack.rb` (0/1 knapsack with choice
+  arrays); both verified against known optima.
+
 ## [0.3.0] - 2026-07-07
 
 ### Fixed

@@ -23,119 +23,160 @@ Or install it yourself as:
     $ gem install gene_genie
 
 ## Usage
-Basic usage is designed to be as simple as possible. You provide two things: a
-template and an evaluator.
 
-A template is an array of hashes, representing a list of variables along with
-their possible range of values that you wish to optimise.
+Basic usage is designed to be as simple as possible. You provide two things:
+a template and a fitness function.
 
-An evaluator implements a fitness method that returns a numeric value.
+A template is a hash describing the variables you want to optimise and their
+possible values. Values can be integer ranges, float ranges, or arrays of
+choices:
 
-The genetic algorithm will then search for the set of values that maximises the
-fitness.
+~~~ruby
+template = {
+  whole_number: 1..10,
+  continuous: -5.0..5.0,
+  pick_one: [:red, :green, :blue]
+}
+~~~
+
+The fitness function takes a hash of candidate values (matching the shape of
+your template) and returns a number. The genetic algorithm searches for the
+values that maximise it:
 
 ~~~ruby
 require 'gene_genie'
 
-template = [{
-  range_of_ints: 1..10,
-  more_ints: 3..100
-}]
+genie = GeneGenie::Genie.new(a: 1..100, b: 2..100) do |params|
+  params[:a] * params[:b]
+end
+genie.optimise
+
+puts genie.best.inspect       # => { a: 100, b: 100 }
+puts genie.best_fitness       # => 10000
 ~~~
 
-Typically, your fitness function will create a model represented by the values
-specified in the template, evaluate the performance of that model, and return a
-fitness score. But, it can be as complicated or simple as you need.
+Typically, your fitness function will build a model from the candidate
+values, evaluate the performance of that model, and return a score. It can be
+as complicated or simple as you need. Instead of a block, you can pass any
+object that responds to `fitness` (or any lambda/proc):
 
-A fitness function should return a float or integer
 ~~~ruby
 class Summer
   def fitness(params)
-    params.inject(0) {|acc, values| acc + values.each_value.inject(&:+)}
+    params.each_value.sum
   end
 end
-~~~
-Then, simply create a Genie, and optimise:
-~~~ruby
+
 genie = GeneGenie::Genie.new(template, Summer.new)
-genie.optimise
-
-puts genie.best.inspect
 ~~~
-If you want to monitor progress of the optimisation algorithm, you can register
-a listener. Listeners are called after every generation with the underlying
-`GenePool`:
+
+### Minimising
+
+To minimise instead of maximise, say so:
+
 ~~~ruby
-genie.register_listener(Proc.new do |pool|
-  puts "Best: #{pool.best.to_hashes}, Score: #{pool.best_fitness}"
-end)
+genie = GeneGenie::Genie.new({ x: -10.0..10.0 }, direction: :minimise) do |params|
+  (params[:x] - 2.37)**2
+end
 ~~~
 
-Genetic algorithms are stochastic. If you need a reproducible run - for tests,
-benchmarks or debugging - pass a seed:
+### Reproducible runs
+
+Genetic algorithms are stochastic. If you need a reproducible run - for
+tests, benchmarks or debugging - pass a seed:
+
 ~~~ruby
 genie = GeneGenie::Genie.new(template, Summer.new, seed: 42)
 ~~~
 
-See the examples directory for more details.
+### Results, statistics and stopping conditions
 
-If you use the simple `genie` interface, the genetic algorithm will come up with
-reasonable best-guesses for various algorithm parameters, but you can dive under
-the covers to give yourself more flexibility.
+`optimise` returns true/false (did the best fitness improve). For more
+detail, use `run`, which returns a `Result` and accepts composable stopping
+conditions - the run stops as soon as any is met:
+
+~~~ruby
+result = genie.run(target_fitness: 10_000, # stop when this fitness is reached
+                   patience: 25,           # or after 25 generations without improvement
+                   max_generations: 500,   # or after 500 generations
+                   max_time: 10)           # or after 10 seconds
+
+result.best         # the best parameters found
+result.best_fitness
+result.generations  # how many generations this run evolved
+result.evaluations  # how many times your fitness function was called
+result.elapsed      # seconds
+result.history      # per-generation best/average fitness, for plotting
+~~~
+
+You can also pass any object responding to `call(gene_pool)` as
+`termination:`, or compose the built-in criteria from
+`GeneGenie::Termination` with `|`.
+
+With no options, `run`/`optimise` stop once the best fitness hasn't improved
+for 15 generations (or after 100 generations, whichever comes first).
+
+### Monitoring progress
+
+To monitor the optimisation as it happens, register a listener. Listeners
+are called after every generation with the underlying `GenePool`:
+
+~~~ruby
+genie.register_listener(proc do |pool|
+  puts "Generation #{pool.generation}: best #{pool.best_fitness}"
+end)
+~~~
+
+See the examples directory for more: a float function minimisation, the
+knapsack problem, and string evolution.
 
 ## Advanced Use
 
-If you want more control over your algorithm, you can skip the `Genie`, and use
-`GenePool` directly.
+`Genie` builds sensible defaults for every part of the algorithm, and lets
+you override any of them:
 
-This allows you to create objects that are used to control the methods used for
-mutation, crossover, gene selection, and gene pool parameters like population
-size and elitism.
 ~~~ruby
-require 'gene_genie'
-
-random = Random.new(42) # or Random.new for a non-reproducible run
-
-mutator = GeneGenie::NudgeMutator.new(template, 0.04, random: random)
-combiner = GeneGenie::Combiner::UniformCombiner.new(random: random)
-gene_factory = GeneGenie::GeneFactory.new(template, fitness_evaluator,
-                                          combiner, random: random)
-selector = GeneGenie::ProportionalSelector.new(random: random)
-
-size = GeneGenie::TemplateEvaluator.new(template).recommended_size
-
-pool = GeneGenie::GenePool.new(template: template,
-                               fitness_evaluator: fitness_evaluator,
-                               gene_factory: gene_factory,
-                               size: size,
-                               mutator: mutator,
-                               selector: selector,
-                               elitism: 1)
-pool.evolve until pool.generation >= 100
-puts pool.best_ever.to_hashes.inspect
+genie = GeneGenie::Genie.new(
+  template, evaluator,
+  seed: 42,
+  size: 100,                                                # population size
+  elitism: 2,                                               # genes carried over unchanged
+  selector: GeneGenie::Selector::TournamentSelector.new,    # parent selection
+  combiner: GeneGenie::Combiner::UniformCombiner.new,       # crossover
+  mutator: GeneGenie::Mutator::SimpleGeneMutator.new(template, 0.02)
+)
 ~~~
-The `mutator` operates on a `Gene` to alter it slightly, mimicking natural gene
-mutations. `NudgeMutator` moves values a small distance; `SimpleGeneMutator`
-can move them anywhere in their range; `NullMutator` does nothing.
 
-The `combiner` controls crossover. `OnePointCombiner` (the default) splits the
-parents at a random point; `UniformCombiner` picks each value from either
-parent at random; `WeightedAverageCombiner` averages the parents' values, which
-suits smooth numeric problems but can never explore outside their range.
+For complete control you can skip `Genie` and use `GenePool` directly -
+`GenePool.build` accepts the same component overrides, or `GenePool.new`
+takes everything explicitly, including a `gene_factory` controlling how the
+initial population is created. Note that `GenePool` works in "always
+maximise" terms and expects an object with a `fitness` method (wrap yours in
+`GeneGenie::FitnessAdapter` for blocks/minimisation/bare-hash handling).
 
-The `selector` picks parent genes. `ProportionalSelector` (the default) is
-classic roulette-wheel selection; `CoinFlipSelector` is a simple rank-based
-alternative.
+The components:
 
-The `gene_factory` creates the initial population of genes. Genes are
-typically generated randomly across the parameter space, but this allows you to
-have more control over how genes are distributed across this space.
+* **Selectors** pick parent genes.
+  `Selector::ProportionalSelector` (default) is classic roulette-wheel
+  selection; `Selector::TournamentSelector` is robust on fitness plateaus
+  and insensitive to fitness scale; `Selector::CoinFlipSelector` is a simple
+  rank-based alternative.
+* **Combiners** control crossover. `Combiner::OnePointCombiner` (default)
+  splits the parents at a random point; `Combiner::UniformCombiner` picks
+  each value from either parent at random;
+  `Combiner::WeightedAverageCombiner` averages the parents' numeric values,
+  which suits smooth problems but can never explore outside their range.
+* **Mutators** alter genes slightly, mimicking natural mutation.
+  `Mutator::NudgeMutator` (default) moves values a small distance;
+  `Mutator::SimpleGeneMutator` can move them anywhere in their range;
+  `Mutator::NullMutator` does nothing.
+
+All stochastic components take a `random:` keyword - pass the same seeded
+`Random` instance to all of them for a reproducible run (or just use
+`Genie`'s `seed:`).
 
 `elitism` is the number of top genes carried into each new generation
 unchanged (default 1), guaranteeing the pool's best fitness never regresses.
-
-All of the stochastic components take a `random:` keyword argument - pass the
-same seeded `Random` instance to all of them for a reproducible run.
 
 ## Contributing
 
@@ -144,6 +185,7 @@ same seeded `Random` instance to all of them for a reproducible run.
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+
 ~~~
 bundle install
 bundle exec rspec    # tests

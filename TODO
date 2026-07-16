@@ -1,6 +1,9 @@
-See docs/REVIEW.md for the current status review and the phased roadmap.
+See docs/REVIEW.md for the current status review and the phased roadmap
+(progress notes at the top).
 
-Previous entry (subsumed by the roadmap's Phase 1 termination objects and
-Phase 2 Genie options pass-through):
+Done:
 - add a .build method to GeneGenie, the same as GenePool, to create a genie
   with a default convergence criteria model
+  -> delivered in 0.4.0: Genie.new takes component overrides, and
+     optimise/run take composable termination criteria (max_generations,
+     target_fitness, patience, max_time, or any custom criterion).

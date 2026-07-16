@@ -11,8 +11,22 @@
 > examples, deterministic, verified green 13× in a row. The product-fitness
 > benchmark that previously failed intermittently at 2000 generations now
 > finds the exact optimum in ~20 generations, 5/5 unseeded runs.
-> Remaining Phase 1 item: composable Termination objects (currently a fixed
-> patience heuristic in `Genie`). Next up: Phase 2 (1.0 interface).
+>
+> **Progress update (2026-07-16):** Phase 1 is complete and the bulk of
+> Phase 2 shipped (v0.4.0): composable `Termination` criteria
+> (max-generations / target-fitness / stagnation / max-time, `|`-combinable),
+> `Genie#run` returning a `Result` (best, fitness, evaluations, elapsed,
+> per-generation history), bare-Hash templates, block/callable fitness,
+> `direction: :minimise`, float-range and choice-array gene types, Genie
+> options pass-through (size/mutator/selector/combiner/elitism),
+> `Mutator::`/`Selector::` namespacing with deprecated top-level aliases,
+> `TournamentSelector`, `FitnessAdapter`, `Gene` equality/inspect. Suite:
+> 121 deterministic examples; new examples (float minimisation, knapsack)
+> verified against known optima — the GA finds the brute-forced knapsack
+> optimum exactly.
+> Remaining from Phase 2 for 1.0: permutation genomes, narrower selector
+> interface, YARD docs site. Phases 3–5 (operator breadth, island model,
+> parallel fitness, benchmark suite, 1.0 release) are future roadmap.
 
 ## 1. Current status — executive summary
 

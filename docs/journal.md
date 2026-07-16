@@ -43,3 +43,34 @@ testing 4200                                   # evolved exactly "testing"
 ```
 
 ---
+
+### 2026-07-16 — actions
+
+Completed the remaining Phase 1 item and the bulk of Phase 2 (v0.4.0), per the user's /goal to complete all outstanding actions. Added: composable Termination criteria (MaxGenerations/TargetFitness/Stagnation/MaxTime, `|`-combinable, or any call(pool)-able), Genie#run returning a Result (best, fitness, generations, evaluation count, elapsed, per-generation history), bare-Hash templates (best returned in matching shape), block/lambda fitness functions, direction: :minimise (with :minimize alias; targets and reported fitness translated), float ranges and choice arrays as gene types (factory sampling, nudge/simple mutators, validator, pool sizing), Genie pass-through of size/mutator/selector/combiner/elitism, Mutator::/Selector:: namespaces with deprecated top-level aliases, Selector::TournamentSelector, FitnessAdapter (wraps evaluators for GenePool use, counts evaluations), Gene equality/hash/inspect, GenePool#unregister_listener. New examples: float_optimisation.rb, knapsack.rb. README rewritten for the new interface; CHANGELOG 0.4.0.
+
+---
+
+### 2026-07-16 — evaluation
+
+121 examples green (repeated runs, randomised order), RuboCop clean (46 files). End-to-end: float minimisation converges to (2.359, -1.206) vs optimum (2.37, -1.2) in 57 generations/42ms; knapsack example finds value 48, confirmed as the exact optimum by brute force over all 1024 packings; pre-existing sum and string examples still find their exact optima.
+
+**Details:**
+```
+$ rspec (x3 + earlier x5)
+121 examples, 0 failures
+
+$ rubocop
+46 files inspected, no offenses detected
+
+$ ruby -I ../lib float_optimisation.rb
+best:        {:x=>2.3590111767993918, :y=>-1.2061050608957986}
+fitness:     0.00015802600387563806
+generations: 57 / evaluations: 11021 / elapsed: 0.042s
+
+$ ruby -I ../lib knapsack.rb
+pack:   stove, water, first_aid, torch, food, map
+value:  48   # brute-force optimum: 48
+weight: 26/30
+```
+
+---
