@@ -46,7 +46,7 @@ values that maximise it:
 ~~~ruby
 require 'gene_genie'
 
-genie = GeneGenie::Genie.new(a: 1..100, b: 2..100) do |params|
+genie = GeneGenie::Genie.new({ a: 1..100, b: 2..100 }) do |params|
   params[:a] * params[:b]
 end
 genie.optimise
@@ -54,6 +54,9 @@ genie.optimise
 puts genie.best.inspect       # => { a: 100, b: 100 }
 puts genie.best_fitness       # => 10000
 ~~~
+
+(The braces around the template matter - without them Ruby reads the hash as
+keyword arguments.)
 
 Typically, your fitness function will build a model from the candidate
 values, evaluate the performance of that model, and return a score. It can be
@@ -67,7 +70,7 @@ class Summer
   end
 end
 
-genie = GeneGenie::Genie.new(template, Summer.new)
+genie = GeneGenie::Genie.new({ a: 1..100, b: 5..1000 }, Summer.new)
 ~~~
 
 ### Minimising

@@ -74,3 +74,9 @@ weight: 26/30
 ```
 
 ---
+
+### 2026-07-16 — actions — docs-sync
+
+Docs freshness hook flagged the doc surfaces; ran a full docs-sync walk, executing every runnable README snippet against the code. Caught two broken snippets and one real API bug: (1) the quick-start passed a bare hash without braces, which Ruby 3 keyword separation turns into unknown keywords - fixed with braces plus an explanatory note; (2) the Summer example implicitly reused the mixed-type template (symbols can't be summed) - given its own numeric template; (3) real bug: components built by users from a bare Hash template (e.g. `SimpleGeneMutator.new(template, 0.02)`) crashed inside Genie because they index the template as an array - all template-taking components (GeneFactory, TemplateEvaluator, SimpleGeneMutator, NudgeMutator) now normalise bare hashes, with a regression spec. Also fixed example README code fences and typos, and verified every snippet plus all five examples run: 122 examples green, RuboCop clean.
+
+---
