@@ -71,8 +71,7 @@ module GeneGenie
     end
 
     def self.validate_template!(template)
-      return if template.is_a?(Array) && !template.empty? &&
-                template.all? { |part| part.is_a?(Hash) }
+      return if template.is_a?(Array) && !template.empty? && template.all?(Hash)
 
       raise ArgumentError, 'template must be an array of hashes of ranges'
     end
