@@ -24,10 +24,10 @@ module GeneGenie
         it 'combines information from the specified gene to create a new gene' do
           new_gene_hashes = subject.call(first_gene, second_gene).to_hashes
 
-          expect(new_gene_hashes[0][:a] == 10 || new_gene_hashes[0][:a] == 30).to be true
-          expect(new_gene_hashes[0][:b] == 20 || new_gene_hashes[0][:b] == 40).to be true
-          expect(new_gene_hashes[1][:c] == 30 || new_gene_hashes[1][:c] == 70).to be true
-          expect(new_gene_hashes[1][:d] == 40 || new_gene_hashes[1][:d] == 60).to be true
+          expect(new_gene_hashes[0][:a]).to eq(10).or eq(30)
+          expect(new_gene_hashes[0][:b]).to eq(20).or eq(40)
+          expect(new_gene_hashes[1][:c]).to eq(30).or eq(70)
+          expect(new_gene_hashes[1][:d]).to eq(40).or eq(60)
         end
 
         it 'returns a Gene' do

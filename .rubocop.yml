@@ -39,3 +39,14 @@ Metrics/BlockLength:
 Style/FrozenStringLiteralComment:
   Exclude:
     - 'spec/**/*'
+
+# `evolve` and `optimise` do the work and report whether the best fitness
+# improved. The boolean is an outcome report, not a query, so a `?` suffix
+# would misdescribe them as pure lookups. `call` is the cop's own default,
+# re-listed because a project-level AllowedMethods replaces it rather than
+# merging - dropping it would flag the Termination criteria.
+Naming/PredicateMethod:
+  AllowedMethods:
+    - call
+    - evolve
+    - optimise
